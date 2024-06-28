@@ -1,0 +1,9 @@
+venv/
+build/
+loader.egg-info/
+config.ini
+
+# cache
+*__pycache__
+.mypy_cache
+.ruff_cache
