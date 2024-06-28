@@ -3,7 +3,7 @@ import logging
 from aiogram import Router
 from aiogram.types import ChatMemberUpdated, Message
 
-from tgbot.filters.user import (
+from ..filters.user import (
     IF_KICKED,
     IF_MEMBER,
     CommandStart,

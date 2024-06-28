@@ -1,5 +1,6 @@
 import configparser
 from dataclasses import dataclass
+from functools import lru_cache
 
 
 @dataclass
@@ -24,10 +25,8 @@ class Config:
 
 
 def load_config(path: str) -> Config:
-    config = configparser.ConfigParser()
-    config.read(path)
-
-    tg_bot = config["tg_bot"]
+    config = read_conf(path)
+    tg_bot = config["bot"]
 
     return Config(
         tg_bot=TgBot(
@@ -37,3 +36,10 @@ def load_config(path: str) -> Config:
         ),
         db=DbConfig(**config["db"]),
     )
+
+
+@lru_cache
+def read_conf(path: str) -> configparser.ConfigParser:
+    config = configparser.ConfigParser()
+    config.read(path)
+    return config

@@ -4,15 +4,15 @@ import sys
 
 from aiogram import Bot, Dispatcher
 
-from ..tgbot.handlers import user
-from .config import Config, load_config
+from loader.main.config import Config, load_config
+from loader.tgbot.handlers import user
 
 logger = logging.getLogger(__name__)
 
 
 async def main() -> None:
     logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
-    config: Config = load_config("bot.ini")
+    config: Config = load_config("config.ini")
 
     bot = Bot(token=config.tg_bot.token)
     dp = Dispatcher()

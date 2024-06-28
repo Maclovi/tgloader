@@ -6,11 +6,11 @@ build-backend = "setuptools.build_meta"
 package-dir = { "" = "." }
 
 [project.scripts]
-tgbot = "tgbot.cli:cli"
+tgbot = "loader.main.cli:cli"
 
 [project]
 name = "loader"
-description = "download music from youtube"
+description = "bot loader music"
 readme = "README.md"
 authors = [
     { name = "Sergey Yavorsky", email = "yavorskyserge@gmail.com" },
