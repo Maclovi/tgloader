@@ -1,10 +1,8 @@
-from pathlib import Path
+from abc import abstractmethod
+from collections.abc import Iterable
 from typing import Protocol
 
 
-class AdapterYouTube(Protocol):
-    async def download(self) -> str: ...
-
-    def get_time(self) -> int: ...
-
-    def get_path_file(self) -> Path: ...
+class YouTubeProto(Protocol):
+    @abstractmethod
+    def read(self, url: str) -> Iterable[bytes]: ...

@@ -3,6 +3,8 @@ import logging
 from aiogram import Router
 from aiogram.types import ChatMemberUpdated, Message
 
+from loader.domain.services.youtube import YouTubeFile
+
 from ..filters.user import (
     IF_KICKED,
     IF_MEMBER,
@@ -47,12 +49,15 @@ async def send_ball_response(message: Message) -> None:
 
 @router.message(RegexSearch(r"(?i)youtu(\.be|be\.com)"))
 async def send_youtube_music(message: Message) -> None:
-    await message.answer(message.text)
+    if message.text is None:
+        return
+    file = YouTubeFile(message.text, "qwerty")
+    await message.answer_audio(file)
 
 
 @router.my_chat_member(IF_KICKED)
 async def process_user_blocked_bot(event: ChatMemberUpdated) -> None:
-    pass
+    print("Съебался")
 
 
 @router.my_chat_member(IF_MEMBER)
