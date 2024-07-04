@@ -16,7 +16,7 @@ IF_MEMBER = ChatMemberUpdatedFilter(member_status_changed=MEMBER)
 F_Return = TypeVar("F_Return")
 
 
-class BaseRegex(Filter):
+class BaseRegex(Filter):  # type: ignore
     def __init__(self, regex: str) -> None:
         self.pattern: re.Pattern[str] = re.compile(regex)
 

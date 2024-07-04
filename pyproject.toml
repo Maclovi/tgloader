@@ -29,8 +29,8 @@ keywords = [
     "telegram",
 ]
 dependencies = [
+    "git+https://github.com/Maclovi/pytube.git",
     "aiogram>=3,<4",
-    "pytube>=15,<16",
 ]
 
 # [project.urls]
@@ -44,7 +44,7 @@ fix = true
 
 [tool.mypy]
 ignore_missing_imports = true
-strict = true
+strict = true 
 pretty = true
 
 [tool.isort]
