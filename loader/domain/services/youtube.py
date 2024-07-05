@@ -33,7 +33,7 @@ class YouTubeInputFile(InputFile):  # type: ignore
         yt: YouTubeProto,
         filename: str | None = None,
         chunk_size: int = 9437184,  # 9mb.
-    ):
+    ) -> None:
         super().__init__(filename, chunk_size)
         self.yt = yt
 
@@ -46,6 +46,7 @@ class YouTubeInputFile(InputFile):  # type: ignore
 
 class FileDto(NamedTuple):
     file: YouTubeInputFile | str
+    caption: str | None = None
     thumbnail: URLInputFile | None = None
 
 
@@ -54,4 +55,4 @@ def get_file(url: str) -> FileDto:
     file = YouTubeInputFile(yt, yt.name)
     thumb = URLInputFile(yt.thumb_url)
 
-    return FileDto(file, thumb)
+    return FileDto(file=file, thumbnail=thumb)

@@ -31,6 +31,9 @@ keywords = [
 dependencies = [
     "git+https://github.com/Maclovi/pytube.git",
     "aiogram>=3,<4",
+    "telethon>=1,<2",
+    "cryptg",
+    "hachoir",
 ]
 
 # [project.urls]

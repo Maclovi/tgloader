@@ -2,6 +2,7 @@ venv/
 build/
 loader.egg-info/
 config.ini
+me.session
 
 # cache
 *__pycache__

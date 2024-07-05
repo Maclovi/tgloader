@@ -1,6 +1,6 @@
 import logging
 
-from aiogram import Router
+from aiogram import F, Router
 from aiogram.types import ChatMemberUpdated, Message
 
 from loader.domain.services.youtube import get_file
@@ -15,6 +15,7 @@ from ..filters.user import (
 
 logger = logging.getLogger(__name__)
 router = Router()
+router.message.filter(F.chat.type == "private")
 
 
 @router.message(CommandStart())
