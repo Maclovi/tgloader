@@ -6,7 +6,9 @@ from typing import TypeVar
 from aiogram.filters import KICKED, MEMBER, ChatMemberUpdatedFilter
 from aiogram.filters import CommandStart as CommandStart
 from aiogram.filters import Filter
-from aiogram.types import Message
+from aiogram.types import Message, User
+
+from loader.main.config import load_config
 
 logger = logging.getLogger(__name__)
 
@@ -48,3 +50,11 @@ class RegexSearch(BaseRegex):
 class RegexFullMatch(BaseRegex):
     async def __call__(self, message: Message) -> bool:
         return self._execute(message, re.fullmatch)
+
+
+class IsClient(Filter):  # type: ignore
+    async def __call__(self, message: Message) -> bool:
+        if not isinstance(message.from_user, User):
+            return False
+        user = message.from_user
+        return bool(user.id == load_config().tg_ids.client_id)
