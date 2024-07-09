@@ -4,14 +4,12 @@ from typing import TYPE_CHECKING, BinaryIO, cast
 from urllib.parse import urlparse
 
 import aiohttp
-from aiogram.types import Message
 from aiogram.types.input_file import InputFile
 from pytube import YouTube
 from pytube.streams import Stream
 from telethon.tl.types import DocumentAttributeAudio
 
-from ..schemes import YouTubeDTO
-from .protocols import StreamProto, YouTubeProto
+from ..protocols import StreamProto, YouTubeProto
 
 if TYPE_CHECKING:
     from aiogram.client.bot import Bot

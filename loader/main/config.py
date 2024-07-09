@@ -30,6 +30,7 @@ class TelegramIds:
     bot_id: int
     boss_id: int
     client_id: int
+    errors_id: int
 
 
 @dataclass(frozen=True)
@@ -63,6 +64,7 @@ def load_config(path: str = "config.ini") -> Config:
             bot_id=tg_ids.getint("bot_id"),
             boss_id=tg_ids.getint("boss_id"),
             client_id=tg_ids.getint("client_id"),
+            errors_id=tg_ids.getint("errors_id"),
         ),
         db=DbConfig(**config["db"]),
     )

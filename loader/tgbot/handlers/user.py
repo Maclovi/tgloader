@@ -1,5 +1,5 @@
 import logging
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 from aiogram import Bot, F, Router
 from aiogram.types import ChatMemberUpdated, Message, User
@@ -13,6 +13,9 @@ from ..filters.user import (
     RegexFullMatch,
     RegexSearch,
 )
+
+if TYPE_CHECKING:
+    from loader.main.config import TelegramIds
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -62,7 +65,7 @@ async def send_ball_response(message: Message) -> None:
 
 
 @router.message(RegexSearch(r"youtu(\.be|be\.com)"))
-async def send_youtube_link(message: Message, client_id: int) -> None:
+async def send_youtube_link(message: Message, tg_ids: "TelegramIds") -> None:
     logger.info("starting to do send_youtube_link")
 
     bot_answer = await message.answer("I got it! downloading...")
@@ -72,6 +75,7 @@ async def send_youtube_link(message: Message, client_id: int) -> None:
     user_id = cast(int, user.id)
     link = cast(str, message.text)
     bot = cast(Bot, message.bot)
+
     json_serialized = YouTubeDTO(
         customer_user_id=user_id,
         link=link,
@@ -79,7 +83,9 @@ async def send_youtube_link(message: Message, client_id: int) -> None:
     ).to_json()
 
     await bot.send_message(
-        client_id, f"youtube{json_serialized}", disable_web_page_preview=True
+        tg_ids.client_id,
+        f"youtube{json_serialized}",
+        disable_web_page_preview=True,
     )
 
 

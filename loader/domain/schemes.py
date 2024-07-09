@@ -1,19 +1,21 @@
 import json
 from dataclasses import dataclass
-from typing import Literal, TypeAlias
+from typing import Literal, Self, TypeAlias
+
+from .protocols import CommonDTOProto
 
 JSONSerializedStr: TypeAlias = str
 
 
 @dataclass(kw_only=True)
-class YouTubeDTO:
+class BaseDTO(CommonDTOProto):
+    link: str
     customer_user_id: int
     message_ids: list[int]
-    link: str
     link_html: str = ""
-    file_id: str | None = None
+    file_id: str = ""
+    error_info: str = ""
     status: Literal["ok", "bad"] = "ok"
-    error_info: str = "something went wrong, sorry, try later"
 
     def __post_init__(self) -> None:
         if not self.link_html:
@@ -23,6 +25,11 @@ class YouTubeDTO:
         return json.dumps(self.__dict__)
 
     @classmethod
-    def to_dict(cls, raw_json: str | bytes | bytearray) -> "YouTubeDTO":
+    def to_dict(cls, raw_json: str | bytes | bytearray) -> Self:
         data = json.loads(raw_json)
         return cls(**data)
+
+
+@dataclass(kw_only=True)
+class YouTubeDTO(BaseDTO):
+    pass

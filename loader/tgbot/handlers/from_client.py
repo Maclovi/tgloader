@@ -1,11 +1,14 @@
 import logging
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 from aiogram import Bot, F, Router
 from aiogram.types import Audio, Message
 
-from loader.domain.schemes import YouTubeDTO
+from loader.domain.schemes import BaseDTO, YouTubeDTO
 from loader.tgbot.filters.user import IsClient
+
+if TYPE_CHECKING:
+    from loader.main.config import TelegramIds
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -13,34 +16,58 @@ router.message.filter(IsClient())
 
 
 @router.message(F.caption.startswith("youtube"))
-async def save_file_id(message: Message) -> None:
-    logger.info("starting to do send_youtube_audio")
-
-    audio = cast(Audio, message.audio)
-    file_id = audio.file_id
+async def send_file_id_client(message: Message, tg_ids: "TelegramIds") -> None:
+    logger.info("starting to do send_file_id_client")
 
     bot = cast(Bot, message.bot)
+    audio = cast(Audio, message.audio)
     caption = cast(str, message.caption)
-    raw_json = caption.replace("youtube", "", 1)
 
-    yt_dto = YouTubeDTO.to_dict(raw_json)
-    customer_chat_id = yt_dto.customer_user_id
+    yt_dto = YouTubeDTO.to_dict(caption.replace("youtube", "", 1))
+    yt_dto.file_id = audio.file_id
+
+    await bot.send_message(
+        tg_ids.client_id,
+        "final_common_file" + yt_dto.to_json(),
+        disable_web_page_preview=True,
+    )
+
+
+@router.message(F.text.startswith("final_common_file"))
+async def send_file_customer(message: Message) -> None:
+    logger.info("starting to do send_file_customer")
+
+    txt = cast(str, message.text)
+    bot = cast(Bot, message.bot)
+    dto = BaseDTO.to_dict(txt.replace("final_common_file", "", 1))
 
     await bot.send_audio(
-        customer_chat_id, file_id, caption=yt_dto.link_html, parse_mode="HTML"
+        dto.customer_user_id,
+        dto.file_id,
+        caption=dto.link_html,
+        parse_mode="HTML",
     )
-    for message_id in yt_dto.message_ids:
-        await bot.delete_message(customer_chat_id, message_id)
+    for message_id in dto.message_ids:
+        await bot.delete_message(dto.customer_user_id, message_id)
 
 
-@router.message(F.text.startswith("yterror"))
-async def send_errors(message: Message) -> None:
+@router.message(F.text.startswith("errors"))
+async def send_errors(message: Message, tg_ids: "TelegramIds") -> None:
     logger.info("starting to do send_errors")
 
     bot = cast(Bot, message.bot)
     txt = cast(str, message.text)
-    ytube_dto = YouTubeDTO.to_dict(txt.replace("yterror", "", 1))
-    bot_answer_id = ytube_dto.message_ids[-1]
 
-    await bot.send_message(ytube_dto.customer_user_id, ytube_dto.error_info)
-    await bot.delete_message(ytube_dto.customer_user_id, bot_answer_id)
+    dto = BaseDTO.to_dict(txt.replace("errors", "", 1))
+    bot_message_id = dto.message_ids[-1]
+    message_for_user = "something went wrong, sorry, try later"
+    message_for_errors = f"error: {dto.error_info!r}\n\n{txt}"
+
+    await bot.edit_message_text(
+        message_for_user,
+        chat_id=dto.customer_user_id,
+        message_id=bot_message_id,
+    )
+    await bot.send_message(
+        tg_ids.errors_id, message_for_errors, disable_web_page_preview=True
+    )

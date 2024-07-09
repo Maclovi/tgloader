@@ -20,10 +20,9 @@ async def tgbot_main() -> None:
     config = load_config("config.ini")
     level = logging.DEBUG if config.tg_bot.debug else logging.INFO
     logging.basicConfig(level=level, stream=sys.stdout)
-    client_id = config.tg_ids.client_id
 
     bot = Bot(token=config.tg_bot.token)
-    dp = Dispatcher(client_id=client_id)
+    dp = Dispatcher(tg_ids=config.tg_ids)
     dp.include_router(from_client.router)
     dp.include_router(user.router)
 
