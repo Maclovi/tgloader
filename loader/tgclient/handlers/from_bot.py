@@ -20,10 +20,10 @@ async def send_file_to_bot(
 
     txt = event.raw_text
     client = cast(TelegramClient, event.client)
-    ytube_dto = YouTubeDTO.to_dict(txt.replace("youtube", "", 1))
+    yt_dto = YouTubeDTO.to_dict(txt.replace("youtube", "", 1))
     try:
         (ytube, audio, audioattr, thumb) = await process_get_needed_data(
-            ytube_dto.link
+            yt_dto.link
         )
         file = await client.upload_file(
             audio, file_size=ytube.file_size, part_size_kb=512
@@ -33,8 +33,8 @@ async def send_file_to_bot(
         )
     except Exception as e:
         logger.error(e)
-        ytube_dto.status = "bad"
-        await client.send_message(ids.bot_id, "yterror" + ytube_dto.dumps())
+        yt_dto.status = "bad"
+        await client.send_message(ids.bot_id, "yterror" + yt_dto.to_json())
 
 
 def include_events_handlers(client: TelegramClient, ids: "TelegramIds") -> None:

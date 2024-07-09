@@ -65,13 +65,18 @@ async def send_ball_response(message: Message) -> None:
 async def send_youtube_link(message: Message, client_id: int) -> None:
     logger.info("starting to do send_youtube_link")
 
+    bot_answer = await message.answer("I got it! downloading...")
+    bot_answer_id = bot_answer.message_id
+
     user = cast(User, message.from_user)
     user_id = cast(int, user.id)
     link = cast(str, message.text)
     bot = cast(Bot, message.bot)
     json_serialized = YouTubeDTO(
-        customer_user_id=user_id, link=link, message_id=message.message_id
-    ).dumps()
+        customer_user_id=user_id,
+        link=link,
+        message_ids=[message.message_id, bot_answer_id],
+    ).to_json()
 
     await bot.send_message(
         client_id, f"youtube{json_serialized}", disable_web_page_preview=True

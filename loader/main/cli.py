@@ -6,8 +6,6 @@ from multiprocessing import Process
 from typing import cast
 
 from aiogram import Bot, Dispatcher
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
 from telethon import TelegramClient
 from telethon.tl.types import User
 
@@ -24,10 +22,7 @@ async def tgbot_main() -> None:
     logging.basicConfig(level=level, stream=sys.stdout)
     client_id = config.tg_ids.client_id
 
-    bot = Bot(
-        token=config.tg_bot.token,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
-    )
+    bot = Bot(token=config.tg_bot.token)
     dp = Dispatcher(client_id=client_id)
     dp.include_router(from_client.router)
     dp.include_router(user.router)
