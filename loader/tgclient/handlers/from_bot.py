@@ -4,7 +4,8 @@ from typing import TYPE_CHECKING, cast
 
 from telethon import TelegramClient, events
 
-from loader.domain.schemes import YouTubeDto
+from loader.domain.schemes import YouTubeDTO
+from loader.domain.services.youtube import process_get_needed_data
 
 if TYPE_CHECKING:
     from loader.main.config import TelegramIds
@@ -12,25 +13,33 @@ if TYPE_CHECKING:
 logger = logging.Logger(__name__)
 
 
-async def send_to_group(
-    event: events.NewMessage.Event,
-    ids: "TelegramIds",
+async def send_file_to_bot(
+    event: events.NewMessage.Event, ids: "TelegramIds"
 ) -> None:
-    logger.info("I'm starting to do send_to_group")
+    logger.info("starting to do send_to_group")
 
-    # TODO: implementing loads youtube audio and send it
-
-    json_raw = event.raw_text.replace("youtube", "", 1)
-    yd = YouTubeDto.from_json(json_raw)
+    txt = event.raw_text
     client = cast(TelegramClient, event.client)
-
-    await client.send_message(ids.group_id, event.raw_text)
-    await client.send_message(ids.bot_id, event.raw_text)
+    ytube_dto = YouTubeDTO.to_dict(txt.replace("youtube", "", 1))
+    try:
+        (ytube, audio, audioattr, thumb) = await process_get_needed_data(
+            ytube_dto.link
+        )
+        file = await client.upload_file(
+            audio, file_size=ytube.file_size, part_size_kb=512
+        )
+        await client.send_file(
+            ids.bot_id, file, attributes=[audioattr], caption=txt, thumb=thumb
+        )
+    except Exception as e:
+        logger.error(e)
+        ytube_dto.status = "bad"
+        await client.send_message(ids.bot_id, "yterror" + ytube_dto.dumps())
 
 
 def include_events_handlers(client: TelegramClient, ids: "TelegramIds") -> None:
     client.add_event_handler(
-        partial(send_to_group, ids=ids),
+        partial(send_file_to_bot, ids=ids),
         events.NewMessage(
             chats=[ids.bot_id], incoming=True, pattern=r"youtube.+"
         ),

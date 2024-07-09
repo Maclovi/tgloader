@@ -33,7 +33,6 @@ dependencies = [
     "aiogram>=3,<4",
     "telethon>=1,<2",
     "cryptg",
-    "hachoir",
 ]
 
 # [project.urls]

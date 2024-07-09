@@ -15,12 +15,14 @@ class DbConfig:
 class TgBot:
     token: str
     use_redis: bool
+    debug: bool
 
 
 @dataclass(frozen=True)
 class TgClient:
     api_id: int
     api_hash: str
+    debug: bool
 
 
 @dataclass(frozen=True)
@@ -28,7 +30,6 @@ class TelegramIds:
     bot_id: int
     boss_id: int
     client_id: int
-    group_id: int
 
 
 @dataclass(frozen=True)
@@ -51,16 +52,17 @@ def load_config(path: str = "config.ini") -> Config:
         tg_bot=TgBot(
             token=tg_bot.get("token"),
             use_redis=tg_bot.getboolean("use_redis"),
+            debug=tg_bot.getboolean("debug"),
         ),
         tg_client=TgClient(
             api_id=tg_client.getint("api_id"),
             api_hash=tg_client.get("api_hash"),
+            debug=tg_client.getboolean("debug"),
         ),
         tg_ids=TelegramIds(
             bot_id=tg_ids.getint("bot_id"),
             boss_id=tg_ids.getint("boss_id"),
             client_id=tg_ids.getint("client_id"),
-            group_id=tg_ids.getint("group_id"),
         ),
         db=DbConfig(**config["db"]),
     )

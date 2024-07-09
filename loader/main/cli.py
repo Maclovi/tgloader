@@ -6,6 +6,8 @@ from multiprocessing import Process
 from typing import cast
 
 from aiogram import Bot, Dispatcher
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from telethon import TelegramClient
 from telethon.tl.types import User
 
@@ -17,11 +19,15 @@ logger = logging.getLogger(__name__)
 
 
 async def tgbot_main() -> None:
-    logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
     config = load_config("config.ini")
+    level = logging.DEBUG if config.tg_bot.debug else logging.INFO
+    logging.basicConfig(level=level, stream=sys.stdout)
     client_id = config.tg_ids.client_id
 
-    bot = Bot(token=config.tg_bot.token)
+    bot = Bot(
+        token=config.tg_bot.token,
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+    )
     dp = Dispatcher(client_id=client_id)
     dp.include_router(from_client.router)
     dp.include_router(user.router)
@@ -30,8 +36,9 @@ async def tgbot_main() -> None:
 
 
 async def tgclient_main() -> None:
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     config = load_config("config.ini")
+    level = logging.DEBUG if config.tg_client.debug else logging.INFO
+    logging.basicConfig(level=level, stream=sys.stdout)
 
     client = TelegramClient(
         "me",
@@ -54,17 +61,18 @@ def run_tgbot() -> None:
     asyncio.run(tgbot_main())
 
 
-def run_tgclient() -> None:
+def run_tgclient() -> Process:
     def run() -> None:
         asyncio.run(tgclient_main())
 
     p = Process(target=run)
     p.start()
+    return p
 
 
 def cli() -> None:
     """Wrapper for command line"""
-    run_tgclient()
+    _ = run_tgclient()
     run_tgbot()
 
 

@@ -13,4 +13,6 @@ class YouTubeProto(Protocol):
     name: str
     thumb_url: str
     author: str
-    file_size: int | float
+    file_size: int
+    video_id: str
+    duration: int
