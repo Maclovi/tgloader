@@ -17,6 +17,7 @@ class YouTubeProto(Protocol):
     file_size: int
     video_id: str
     duration: int
+    views: int
 
 
 class CommonDTOProto(Protocol):

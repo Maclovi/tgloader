@@ -8,7 +8,7 @@ from loader.domain.schemes import BaseDTO, YouTubeDTO
 from loader.tgbot.filters.user import IsClient
 
 if TYPE_CHECKING:
-    from loader.main.config import TelegramIds
+    from loader.config import TelegramIds
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -39,12 +39,15 @@ async def send_file_customer(message: Message) -> None:
 
     txt = cast(str, message.text)
     bot = cast(Bot, message.bot)
+    bot_me = await bot.me()
+    bot_username = f"@{bot_me.username}"
+
     dto = BaseDTO.to_dict(txt.replace("final_common_file", "", 1))
 
     await bot.send_audio(
         dto.customer_user_id,
         dto.file_id,
-        caption=dto.link_html,
+        caption=f"{dto.message_for_answer}\n{bot_username}",
         parse_mode="HTML",
     )
     for message_id in dto.message_ids:
@@ -61,7 +64,7 @@ async def send_errors(message: Message, tg_ids: "TelegramIds") -> None:
     dto = BaseDTO.to_dict(txt.replace("errors", "", 1))
     bot_message_id = dto.message_ids[-1]
     message_for_user = "something went wrong, sorry, try later"
-    message_for_errors = f"error: {dto.error_info!r}\n\n{txt}"
+    message_for_group = f"error: {dto.error_info!r}\n\n{txt}"
 
     await bot.edit_message_text(
         message_for_user,
@@ -69,5 +72,5 @@ async def send_errors(message: Message, tg_ids: "TelegramIds") -> None:
         message_id=bot_message_id,
     )
     await bot.send_message(
-        tg_ids.errors_id, message_for_errors, disable_web_page_preview=True
+        tg_ids.errors_id, message_for_group, disable_web_page_preview=True
     )

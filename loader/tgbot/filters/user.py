@@ -1,7 +1,7 @@
 import logging
 import re
 from collections.abc import Callable
-from typing import TypeVar, cast
+from typing import TypeVar
 
 from aiogram.filters import KICKED, MEMBER, ChatMemberUpdatedFilter
 from aiogram.filters import CommandStart as CommandStart

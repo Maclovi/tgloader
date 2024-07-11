@@ -6,11 +6,12 @@ from multiprocessing import Process
 from typing import cast
 
 from aiogram import Bot, Dispatcher
-from telethon import TelegramClient
 from telethon.tl.types import User
 
+from loader.auth import auth_all
 from loader.config import load_config
 from loader.tgbot.handlers import from_client, user
+from loader.tgclient.client import get_client
 from loader.tgclient.handlers import from_bot
 
 logger = logging.getLogger(__name__)
@@ -33,17 +34,11 @@ async def tgclient_main() -> None:
     config = load_config("config.ini")
     level = logging.DEBUG if config.tg_client.debug else logging.INFO
     logging.basicConfig(level=level, stream=sys.stdout)
-
-    client = TelegramClient(
-        "me",
-        api_id=config.tg_client.api_id,
-        api_hash=config.tg_client.api_hash,
-        device_model="iPhone 11 Pro",
-        system_version="IOS 100.1",
-    )
+    client = get_client(config.tg_client)
     from_bot.include_events_handlers(client, config.tg_ids)
 
     async with client:
+        await client.get_dialogs()  # for cache
         me = cast(User, await client.get_me())
         logger.info(
             f"client is starting! name={me.first_name} username={me.username}"
@@ -59,13 +54,14 @@ def run_tgclient() -> Process:
     def run() -> None:
         asyncio.run(tgclient_main())
 
-    p = Process(target=run)
+    p = Process(target=run, daemon=True)
     p.start()
     return p
 
 
 def cli() -> None:
     """Wrapper for command line"""
+    auth_all()
     _ = run_tgclient()
     run_tgbot()
 

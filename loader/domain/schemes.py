@@ -12,14 +12,14 @@ class BaseDTO(CommonDTOProto):
     link: str
     customer_user_id: int
     message_ids: list[int]
-    link_html: str = ""
+    message_for_answer: str = ""
     file_id: str = ""
     error_info: str = ""
     status: Literal["ok", "bad"] = "ok"
 
     def __post_init__(self) -> None:
-        if not self.link_html:
-            self.link_html = f"<a href={self.link!r}>link</a>"
+        if not self.message_for_answer:
+            self.message_for_answer = f"<a href={self.link!r}>link</a>"
 
     def to_json(self) -> JSONSerializedStr:
         return json.dumps(self.__dict__)

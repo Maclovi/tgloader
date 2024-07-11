@@ -23,3 +23,4 @@ class YouTubeAdapter(YouTubeProto):
         self.file_size = self.audio.filesize
         self.video_id = urlparse(url).query.split("=", 1)[-1]
         self.duration: int = yt.length
+        self.views = yt.views

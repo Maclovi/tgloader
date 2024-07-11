@@ -15,7 +15,7 @@ from ..filters.user import (
 )
 
 if TYPE_CHECKING:
-    from loader.main.config import TelegramIds
+    from loader.config import TelegramIds
 
 logger = logging.getLogger(__name__)
 router = Router()

@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from aiogram.client.bot import Bot
 
 
-class YouTubeInputFileBase:
+class InputAudioTube:
     def __init__(
         self,
         audio: StreamProto,
