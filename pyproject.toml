@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 package-dir = { "" = "." }
 
 [project.scripts]
-tgbot = "loader.cli:cli"
+startbot = "loader.cli:cli"
 
 [project]
 name = "loader"
@@ -29,7 +29,7 @@ keywords = [
     "telegram",
 ]
 dependencies = [
-    "git+https://github.com/Maclovi/pytube.git",
+    "pytube @ git+https://github.com/Maclovi/pytube.git",
     "aiogram>=3,<4",
     "telethon>=1,<2",
     "cryptg",

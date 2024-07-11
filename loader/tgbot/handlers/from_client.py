@@ -2,7 +2,7 @@ import logging
 from typing import TYPE_CHECKING, cast
 
 from aiogram import Bot, F, Router
-from aiogram.types import Audio, Message
+from aiogram.types import Audio, Message, User
 
 from loader.domain.schemes import BaseDTO, YouTubeDTO
 from loader.tgbot.filters.user import IsClient
@@ -16,10 +16,11 @@ router.message.filter(IsClient())
 
 
 @router.message(F.caption.startswith("youtube"))
-async def send_file_id_client(message: Message, tg_ids: "TelegramIds") -> None:
+async def send_file_id_client(message: Message) -> None:
     logger.info("starting to do send_file_id_client")
 
     bot = cast(Bot, message.bot)
+    user = cast(User, message.from_user)
     audio = cast(Audio, message.audio)
     caption = cast(str, message.caption)
 
@@ -27,7 +28,7 @@ async def send_file_id_client(message: Message, tg_ids: "TelegramIds") -> None:
     yt_dto.file_id = audio.file_id
 
     await bot.send_message(
-        tg_ids.client_id,
+        user.id,
         "final_common_file" + yt_dto.to_json(),
         disable_web_page_preview=True,
     )
