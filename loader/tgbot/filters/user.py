@@ -1,14 +1,14 @@
 import logging
 import re
 from collections.abc import Callable
-from typing import TypeVar
+from typing import TypeVar, cast
 
 from aiogram.filters import KICKED, MEMBER, ChatMemberUpdatedFilter
 from aiogram.filters import CommandStart as CommandStart
 from aiogram.filters import Filter
 from aiogram.types import Message, User
 
-from loader.main.config import load_config
+from loader.config import load_config
 
 logger = logging.getLogger(__name__)
 
@@ -56,5 +56,8 @@ class IsClient(Filter):  # type: ignore
     async def __call__(self, message: Message) -> bool:
         if not isinstance(message.from_user, User):
             return False
-        user = message.from_user
-        return bool(user.id == load_config().tg_ids.client_id)
+
+        user_chat_id = message.from_user.id
+        client_chat_id = load_config().tg_ids.client_id
+
+        return bool(user_chat_id == client_chat_id)

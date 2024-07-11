@@ -9,7 +9,7 @@ from aiogram import Bot, Dispatcher
 from telethon import TelegramClient
 from telethon.tl.types import User
 
-from loader.main.config import load_config
+from loader.config import load_config
 from loader.tgbot.handlers import from_client, user
 from loader.tgclient.handlers import from_bot
 
