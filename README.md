@@ -73,7 +73,7 @@ This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE
 
 ## Author
 
-**Your Name** - [GitHub Profile](https://github.com/Maclovi)
+**Sergey** - [GitHub Profile](https://github.com/Maclovi)
 
 ---
 
