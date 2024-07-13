@@ -7,6 +7,7 @@
 ## Features
 
 - Download audio from YouTube links.
+- File download limit up to 2 GB 
 - Future support planned for additional sources.
 
 ## Installation
