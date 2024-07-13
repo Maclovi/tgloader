@@ -73,5 +73,5 @@ async def send_errors(message: Message, tg_ids: "TelegramIds") -> None:
         message_id=bot_message_id,
     )
     await bot.send_message(
-        tg_ids.errors_id, message_for_group, disable_web_page_preview=True
+        tg_ids.group_error_id, message_for_group, disable_web_page_preview=True
     )

@@ -24,7 +24,7 @@ class CommonDTOProto(Protocol):
     link: str
     message_ids: list[int]
     customer_user_id: int
-    link_html: str
+    message_for_answer: str
     file_id: str
     status: Literal["ok", "bad"]
     error_info: str

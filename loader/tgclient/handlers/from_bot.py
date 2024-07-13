@@ -1,5 +1,6 @@
 import logging
 import time
+from functools import partial
 from typing import TYPE_CHECKING, cast
 
 from telethon import TelegramClient
@@ -14,7 +15,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-async def send_file_bot(event: NewMessage.Event) -> None:
+async def send_file_bot(event: NewMessage.Event, ids: "TelegramIds") -> None:
     logger.info("starting to do send_file_bot")
 
     client = cast(TelegramClient, event.client)
@@ -28,7 +29,7 @@ async def send_file_bot(event: NewMessage.Event) -> None:
             datas.audio, file_size=datas.ytube.file_size, part_size_kb=512
         )
         await client.send_file(
-            event.sender_id,
+            ids.bot_id,
             file,
             attributes=[datas.audioattr],
             caption="youtube" + yt_dto.to_json(),
@@ -40,25 +41,27 @@ async def send_file_bot(event: NewMessage.Event) -> None:
         logger.error(e)
         yt_dto.status = "bad"
         yt_dto.error_info = str(e)
-        await client.send_message(event.sender_id, "errors" + yt_dto.to_json())
+        await client.send_message(ids.bot_id, "errors" + yt_dto.to_json())
 
 
-async def proxy_for_success_files(event: NewMessage.Event) -> None:
+async def proxy_for_success_files(
+    event: NewMessage.Event, ids: "TelegramIds"
+) -> None:
     logger.info("starting to do proxy_for_success_files")
 
     client = cast(TelegramClient, event.client)
-    await client.send_message(event.sender_id, event.raw_text)
+    await client.send_message(ids.bot_id, event.raw_text)
 
 
 def include_events_handlers(
     client: TelegramClient, tg_ids: "TelegramIds"
 ) -> None:
     client.add_event_handler(
-        send_file_bot,
+        partial(send_file_bot, ids=tg_ids),
         NewMessage(chats=[tg_ids.bot_id], incoming=True, pattern=r"^youtube."),
     )
     client.add_event_handler(
-        proxy_for_success_files,
+        partial(proxy_for_success_files, ids=tg_ids),
         NewMessage(
             chats=[tg_ids.bot_id], incoming=True, pattern=r"^final_common_file."
         ),

@@ -5,10 +5,11 @@ from functools import lru_cache
 
 @dataclass(frozen=True)
 class DbConfig:
-    host: str
-    password: str
     user: str
+    password: str
     database: str
+    host: str
+    port: str
 
 
 @dataclass(frozen=True)
@@ -30,7 +31,8 @@ class TelegramIds:
     bot_id: int
     boss_id: int
     client_id: int
-    errors_id: int
+    group_error_id: int
+    group_cache_id: int
 
 
 @dataclass(frozen=True)
@@ -64,7 +66,8 @@ def load_config(path: str = "config.ini") -> Config:
             bot_id=tg_ids.getint("bot_id"),
             boss_id=tg_ids.getint("boss_id"),
             client_id=tg_ids.getint("client_id"),
-            errors_id=tg_ids.getint("errors_id"),
+            group_error_id=tg_ids.getint("group_error_id"),
+            group_cache_id=tg_ids.getint("group_cache_id"),
         ),
         db=DbConfig(**config["db"]),
     )

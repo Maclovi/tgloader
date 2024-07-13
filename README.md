@@ -5,8 +5,7 @@
 **YouTube Audio Downloader Bot** is a Telegram bot that allows users to download audio from YouTube links. The bot is designed with future scalability in mind, allowing for easy extension to support additional sources beyond YouTube.
 
 ## Features
-
-- Download audio from YouTube links.
+ - Download audio from YouTube links.
 - File download limit up to 2 GB 
 - Future support planned for additional sources.
 
@@ -15,7 +14,7 @@
 ### Requirements
 
 - Python 3.10 or higher
-- PostgreSQL 14 or higher
+- PostgreSQL 16 or higher
 - Telegram bot token (from [BotFather](https://t.me/botfather))
 - Telegram application with **api_id & api_hash** ([create client](https://my.telegram.org/))
 - Telegram group for errors
@@ -36,7 +35,7 @@ Install the required Python libraries:
 pip install .
 ```
 ### How to start
-1. Edit code in a correspoing way
+1. Edit code in a corresponding way
 2. Rename example.config.ini to config.ini
 3. Fill out the confg.ini
 
@@ -48,8 +47,8 @@ runbot
 ```
 ### Authorization
 
-After starting the bot, first of all you need to log in. 
-The program will ask you to log in for YouTube and then for the Telegram client.
+- After starting the bot, first of all you need to log in. 
+- The program will ask you to log in for YouTube and then for the Telegram client.
 ### Commands
 
 - **/start** - Display a welcome message and usage instructions.
