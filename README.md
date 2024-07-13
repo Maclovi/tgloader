@@ -16,9 +16,9 @@
 - Python 3.10 or higher
 - PostgreSQL 14 or higher
 - Telegram bot token (from [BotFather](https://t.me/botfather))
-- telegram application with **api_id & api_hash** (from https://my.telegram.org/)
-- telegram group for errors
-- telegram group for cache
+- Telegram application with **api_id & api_hash** (from https://my.telegram.org/)
+- Telegram group for errors
+- Telegram group for cache
 ### Cloning the Repository
 
 Clone the repository to your local machine:
@@ -26,7 +26,7 @@ Clone the repository to your local machine:
 ```bash
 git clone https://github.com/Maclovi/tgloader.git 
 cd tgloader
-``
+```
 ### Dependencies
 
 Install the required Python libraries:
