@@ -48,8 +48,8 @@ runbot
 ```
 ### Authorization
 
-After starting the bot, first of all you need to log in.
-The bot will ask you to log in for YouTube and then for the Telegram client.
+After starting the bot, first of all you need to log in. 
+The program will ask you to log in for YouTube and then for the Telegram client.
 ### Commands
 
 - **/start** - Display a welcome message and usage instructions.
