@@ -33,6 +33,7 @@ async def send_file_bot(event: NewMessage.Event) -> None:
             attributes=[datas.audioattr],
             caption="youtube" + yt_dto.to_json(),
             thumb=datas.thumb,
+            allow_cache=False,
         )
         logger.info(f"audio downloaded for {time.time() - start:.3f} seconds")
     except Exception as e:

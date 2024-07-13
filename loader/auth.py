@@ -45,10 +45,10 @@ def auth_telegram() -> None:
 
 
 def auth_all() -> None:
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     auth_youtube()
     auth_telegram()
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     auth_all()

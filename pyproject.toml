@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 package-dir = { "" = "." }
 
 [project.scripts]
-startbot = "loader.cli:cli"
+runbot = "loader.cli:cli"
 
 [project]
 name = "loader"
@@ -36,13 +36,9 @@ dependencies = [
 ]
 
 [project.urls]
+Homepage = "https://github.com/Maclovi/tgloader"
 Repository = "https://github.com/Maclovi/tgloader"
-# Homepage = ""
-# Documentation = ""
-
-[tool.ruff]
-line-length = 80
-fix = true
+Documentation = "https://github.com/Maclovi/tgloader"
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -52,6 +48,10 @@ pretty = true
 [tool.isort]
 profile = "black"
 line_length = 80
+
+[tool.ruff]
+line-length = 80
+fix = true
 
 [tool.ruff.lint]
 select = [
