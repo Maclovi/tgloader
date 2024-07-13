@@ -3,12 +3,12 @@ import logging
 import sys
 from collections.abc import Awaitable
 from multiprocessing import Process
+from subprocess import run as run_shell
 from typing import cast
 
 from aiogram import Bot, Dispatcher
 from telethon.tl.types import User
 
-from loader.auth import auth_all
 from loader.config import load_config
 from loader.tgbot.handlers import from_client, user
 from loader.tgclient.client import get_client
@@ -61,7 +61,7 @@ def run_tgclient() -> Process:
 
 def cli() -> None:
     """Wrapper for command line"""
-    auth_all()
+    run_shell(["python", "loader/auth.py"])
     _ = run_tgclient()
     run_tgbot()
 

@@ -17,7 +17,7 @@
 - Python 3.10 or higher
 - PostgreSQL 14 or higher
 - Telegram bot token (from [BotFather](https://t.me/botfather))
-- Telegram application with **api_id & api_hash** (from https://my.telegram.org/)
+- Telegram application with **api_id & api_hash** ([create client](https://my.telegram.org/))
 - Telegram group for errors
 - Telegram group for cache
 ### Cloning the Repository
@@ -46,6 +46,10 @@ Run the bot:
 ```bash
 runbot
 ```
+### Authorization
+
+After starting the bot, first of all you need to log in.
+The bot will ask you to log in for YouTube and then for the Telegram client.
 ### Commands
 
 - **/start** - Display a welcome message and usage instructions.
