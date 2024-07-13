@@ -10,9 +10,9 @@ from aiogram import Bot, Dispatcher
 from telethon.tl.types import User
 
 from loader.config import load_config
-from loader.tgbot.handlers import from_client, user
+from loader.tgbot.handlers import fromclient, user
 from loader.tgclient.client import get_client
-from loader.tgclient.handlers import from_bot
+from loader.tgclient.handlers import frombot
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ async def tgbot_main() -> None:
 
     bot = Bot(token=config.tg_bot.token)
     dp = Dispatcher(tg_ids=config.tg_ids)
-    dp.include_router(from_client.router)
+    dp.include_router(fromclient.router)
     dp.include_router(user.router)
 
     await dp.start_polling(bot)
@@ -35,7 +35,7 @@ async def tgclient_main() -> None:
     level = logging.DEBUG if config.tg_client.debug else logging.INFO
     logging.basicConfig(level=level, stream=sys.stdout)
     client = get_client(config.tg_client)
-    from_bot.include_events_handlers(client, config.tg_ids)
+    frombot.include_events_handlers(client, config.tg_ids)
 
     async with client:
         await client.get_dialogs()  # for cache

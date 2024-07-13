@@ -39,7 +39,6 @@ async def send_file_bot(event: NewMessage.Event, ids: "TelegramIds") -> None:
         logger.info(f"audio downloaded for {time.time() - start:.3f} seconds")
     except Exception as e:
         logger.error(e)
-        yt_dto.status = "bad"
         yt_dto.error_info = str(e)
         await client.send_message(ids.bot_id, "errors" + yt_dto.to_json())
 

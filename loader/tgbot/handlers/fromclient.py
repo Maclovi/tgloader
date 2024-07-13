@@ -16,16 +16,26 @@ router.message.filter(IsClient())
 
 
 @router.message(F.caption.startswith("youtube"))
-async def send_file_id_client(message: Message) -> None:
+async def send_file_id_client(message: Message, tg_ids: "TelegramIds") -> None:
     logger.info("starting to do send_file_id_client")
 
     bot = cast(Bot, message.bot)
     user = cast(User, message.from_user)
     audio = cast(Audio, message.audio)
     caption = cast(str, message.caption)
+    bot_me = await bot.me()
+    bot_username = f"@{bot_me.username}"
 
     yt_dto = YouTubeDTO.to_dict(caption.replace("youtube", "", 1))
+
+    msg = await bot.send_audio(
+        tg_ids.group_cache_id,
+        audio.file_id,
+        caption=f"{yt_dto.message_for_answer}\n{bot_username}",
+        parse_mode="HTML",
+    )
     yt_dto.file_id = audio.file_id
+    yt_dto.audio_id = msg.message_id
 
     await bot.send_message(
         user.id,
@@ -35,21 +45,18 @@ async def send_file_id_client(message: Message) -> None:
 
 
 @router.message(F.text.startswith("final_common_file"))
-async def send_file_customer(message: Message) -> None:
+async def send_file_customer(message: Message, tg_ids: "TelegramIds") -> None:
     logger.info("starting to do send_file_customer")
 
     txt = cast(str, message.text)
     bot = cast(Bot, message.bot)
-    bot_me = await bot.me()
-    bot_username = f"@{bot_me.username}"
 
     dto = BaseDTO.to_dict(txt.replace("final_common_file", "", 1))
+    if dto.audio_id is None:
+        raise AttributeError("Audio_id is None, should be integer.")
 
-    await bot.send_audio(
-        dto.customer_user_id,
-        dto.file_id,
-        caption=f"{dto.message_for_answer}\n{bot_username}",
-        parse_mode="HTML",
+    await bot.forward_message(
+        dto.customer_user_id, tg_ids.group_cache_id, dto.audio_id
     )
     for message_id in dto.message_ids:
         await bot.delete_message(dto.customer_user_id, message_id)

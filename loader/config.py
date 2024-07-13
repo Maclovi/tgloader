@@ -11,6 +11,12 @@ class DbConfig:
     host: str
     port: str
 
+    def get_uri(self) -> str:
+        return (
+            f"postgres://{self.user}:{self.password}@{self.host}:{self.port}/"
+            f"{self.database}?sslmode=require"
+        )
+
 
 @dataclass(frozen=True)
 class TgBot:

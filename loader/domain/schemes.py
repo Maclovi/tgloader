@@ -15,7 +15,7 @@ class BaseDTO(CommonDTOProto):
     message_for_answer: str = ""
     file_id: str = ""
     error_info: str = ""
-    status: Literal["ok", "bad"] = "ok"
+    audio_id: int | None = None
 
     def __post_init__(self) -> None:
         if not self.message_for_answer:
