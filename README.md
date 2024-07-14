@@ -52,6 +52,7 @@ runbot
 ### Commands
 
 - **/start** - Display a welcome message and usage instructions.
+
 ## Example
 
 1. Send the `/start` command to see the welcome message and instructions.
