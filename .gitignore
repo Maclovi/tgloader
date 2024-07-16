@@ -1,8 +1,11 @@
 venv/
 build/
 loader.egg-info/
+
+# sensitive
 config.ini
 me.session
+.sens/
 
 # cache
 *__pycache__
