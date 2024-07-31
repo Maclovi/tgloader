@@ -1,0 +1,21 @@
+services:
+  bot:
+    build: .
+    environment:
+      PYTHONPATH: ".:."
+    command: poetry run exchange_bot
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: always
+  client:
+    build: .
+    environment:
+      PYTHONPATH: ".:."
+    command: poetry run faststream run --factory exchange_rate_bot.main.queue:create_app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: always

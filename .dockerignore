@@ -1,4 +1,13 @@
 venv/
+tests/
+dev.ini
 example.config.ini
+LICENSE
+README.md
+
+# cache
 .mypy_cache
 .ruff_cache
+.pytest_cache
+**__pycache__/
+

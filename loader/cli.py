@@ -1,3 +1,4 @@
+import argparse
 import asyncio
 import logging
 import sys
@@ -18,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 async def tgbot_main() -> None:
-    config = load_config("config.ini")
+    config = load_config("prod.ini")
     level = logging.DEBUG if config.tg_bot.debug else logging.INFO
     logging.basicConfig(level=level, stream=sys.stdout)
 
@@ -31,7 +32,7 @@ async def tgbot_main() -> None:
 
 
 async def tgclient_main() -> None:
-    config = load_config("config.ini")
+    config = load_config("prod.ini")
     level = logging.DEBUG if config.tg_client.debug else logging.INFO
     logging.basicConfig(level=level, stream=sys.stdout)
     client = get_client(config.tg_client)
@@ -46,11 +47,15 @@ async def tgclient_main() -> None:
         await cast(Awaitable[None], client.run_until_disconnected())
 
 
-def run_tgbot() -> None:
+def run_tgbot_async() -> None:
     asyncio.run(tgbot_main())
 
 
-def run_tgclient() -> Process:
+def run_tgclient_async() -> None:
+    asyncio.run(tgclient_main())
+
+
+def run_tgclient_process() -> Process:
     def run() -> None:
         asyncio.run(tgclient_main())
 
@@ -61,9 +66,25 @@ def run_tgclient() -> Process:
 
 def cli() -> None:
     """Wrapper for command line"""
-    run_shell(["python", "loader/auth.py"])
-    _ = run_tgclient()
-    run_tgbot()
+    parser = argparse.ArgumentParser(description="Process start services")
+    parser.add_argument(
+        "--run",
+        default="all",
+        help="how we launch services",
+        choices=["all", "bot", "client"],
+    )
+    args = parser.parse_args()
+
+    if args.run in ("all", "client"):
+        run_shell(["python", "loader/auth.py"])
+
+    if args.run == "all":
+        _ = run_tgclient_process()
+        run_tgbot_async()
+    elif args.run == "bot":
+        run_tgbot_async()
+    elif args.run == "client":
+        run_tgclient_async()
 
 
 if __name__ == "__main__":
