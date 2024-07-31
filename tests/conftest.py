@@ -1,5 +1,5 @@
 from collections.abc import AsyncGenerator
-from typing import Any, cast
+from typing import cast
 
 import pytest
 from sqlalchemy.ext.asyncio import (
@@ -38,6 +38,6 @@ def engine(config: Config) -> AsyncEngine:
 
 
 @pytest.fixture
-async def conn(engine: AsyncEngine) -> AsyncGenerator[AsyncConnection, Any]:
+async def conn(engine: AsyncEngine) -> AsyncGenerator[AsyncConnection, None]:
     async with engine.connect() as conn:
         yield conn

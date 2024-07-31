@@ -22,12 +22,13 @@ class YouTubeProto(Protocol):
 
 class CommonDTOProto(Protocol):
     link: str
-    message_ids: list[int]
     customer_user_id: int
+    message_ids: list[int]
     message_for_answer: str
     file_id: str
     status: Literal["ok", "bad"]
     error_info: str
+    audio_id: int | None
 
     @abstractmethod
     def to_json(self) -> str: ...

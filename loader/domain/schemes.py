@@ -14,6 +14,7 @@ class BaseDTO(CommonDTOProto):
     message_ids: list[int]
     message_for_answer: str = ""
     file_id: str = ""
+    status: Literal["ok", "bad"] = "ok"
     error_info: str = ""
     audio_id: int | None = None
 
