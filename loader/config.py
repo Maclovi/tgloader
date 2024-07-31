@@ -13,7 +13,7 @@ class DbConfig:
 
     def get_uri(self) -> str:
         return (
-            f"postgres://{self.user}:{self.password}@{self.host}:{self.port}/"
+            f"{self.user}:{self.password}@{self.host}:{self.port}/"
             f"{self.database}?sslmode=require"
         )
 
@@ -50,7 +50,7 @@ class Config:
 
 
 @lru_cache
-def load_config(path: str = "config.ini") -> Config:
+def load_config(path: str = "prod.ini") -> Config:
     config = read_conf(path)
 
     tg_bot = config["bot"]

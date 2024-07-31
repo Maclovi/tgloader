@@ -4,7 +4,7 @@ import sys
 from collections.abc import Awaitable
 from multiprocessing import Process
 from subprocess import run as run_shell
-from typing import cast
+from typing import Never, cast
 
 from aiogram import Bot, Dispatcher
 from telethon.tl.types import User

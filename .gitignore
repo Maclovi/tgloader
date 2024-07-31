@@ -4,10 +4,14 @@ loader.egg-info/
 
 # sensitive
 config.ini
+prod.ini
+dev.ini
 me.session
 .sens/
+tests/unit/test_env.py
 
 # cache
 *__pycache__
 .mypy_cache
 .ruff_cache
+.pytest_cache

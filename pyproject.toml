@@ -33,6 +33,15 @@ dependencies = [
     "aiogram>=3,<4",
     "telethon>=1,<2",
     "cryptg",
+    "sqlalchemy",
+    "alembic",
+    "psycopg[binary]",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest==8.3.2",
+    "pytest-asyncio==0.23.8",
 ]
 
 [project.urls]
@@ -40,10 +49,24 @@ Homepage = "https://github.com/Maclovi/tgloader"
 Repository = "https://github.com/Maclovi/tgloader"
 Documentation = "https://github.com/Maclovi/tgloader"
 
+[tool.pytest.ini_options]
+addopts = "--asyncio-mode=auto"
+testpaths = [
+    "tests",
+    "integration",
+]
+
 [tool.mypy]
 ignore_missing_imports = true
-strict = true 
+strict = true
 pretty = true
+allow_subclassing_any = true
+allow_untyped_calls = true
+show_error_codes = true
+implicit_reexport = true
+warn_unused_ignores = false
+allow_untyped_decorators = true
+namespace_packages = true
 
 [tool.isort]
 profile = "black"

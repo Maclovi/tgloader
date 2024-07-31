@@ -5,8 +5,8 @@
 **YouTube Audio Downloader Bot** is a Telegram bot that allows users to download audio from YouTube links. The bot is designed with future scalability in mind, allowing for easy extension to support additional sources beyond YouTube.
 
 ## Features
- - Download audio from YouTube links.
-- File download limit up to 2 GB 
+- Download audio from YouTube links.
+- Integration with teletnon to increase the limit from 50MB to 2GB
 - Future support planned for additional sources.
 
 ## Installation
@@ -19,6 +19,7 @@
 - Telegram application with **api_id & api_hash** ([create client](https://my.telegram.org/))
 - Telegram group for errors
 - Telegram group for cache
+
 ### Cloning the Repository
 
 Clone the repository to your local machine:

@@ -1,4 +1,4 @@
-name: Kaka sobachay
+name: CI
 on: workflow_dispatch
 jobs:
   print:
@@ -6,3 +6,7 @@ jobs:
     steps:
       - name: djskfj
         run: echo Hello GH Actions!
+  build_and_push:
+    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
