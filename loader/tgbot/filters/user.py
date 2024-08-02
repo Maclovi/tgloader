@@ -1,14 +1,14 @@
 import logging
 import re
 from collections.abc import Callable
-from typing import TypeVar
+from typing import TYPE_CHECKING, TypeVar
 
-from aiogram.filters import KICKED, MEMBER, ChatMemberUpdatedFilter
+from aiogram.filters import KICKED, MEMBER, ChatMemberUpdatedFilter, Filter
 from aiogram.filters import CommandStart as CommandStart
-from aiogram.filters import Filter
 from aiogram.types import Message, User
 
-from loader.config import load_config
+if TYPE_CHECKING:
+    from loader.di import Container
 
 logger = logging.getLogger(__name__)
 
@@ -53,11 +53,11 @@ class RegexFullMatch(BaseRegex):
 
 
 class IsClient(Filter):  # type: ignore
-    async def __call__(self, message: Message) -> bool:
+    async def __call__(self, message: Message, ioc: "Container") -> bool:
         if not isinstance(message.from_user, User):
             return False
 
         user_chat_id = message.from_user.id
-        client_chat_id = load_config().tg_ids.client_id
+        client_chat_id = ioc.config.tg_ids.client_id
 
         return bool(user_chat_id == client_chat_id)

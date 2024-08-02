@@ -11,8 +11,10 @@ class DbConfig:
     host: str
     port: str
 
-    def get_uri(self) -> str:
+    @property
+    def db_uri(self) -> str:
         return (
+            f"postgresql+psycopg://"
             f"{self.user}:{self.password}@{self.host}:{self.port}/"
             f"{self.database}?sslmode=require"
         )
@@ -50,7 +52,7 @@ class Config:
 
 
 @lru_cache
-def load_config(path: str = "prod.ini") -> Config:
+def load_config(path: str) -> Config:
     config = read_conf(path)
 
     tg_bot = config["bot"]

@@ -1,4 +1,4 @@
-from python:3.12.4-slim as loader
+from python:3.12.4-slim
 
 ENV PYTHONUNBUFFERED=1
 

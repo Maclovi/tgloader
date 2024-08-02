@@ -15,7 +15,7 @@ from ..filters.user import (
 )
 
 if TYPE_CHECKING:
-    from loader.config import TelegramIds
+    from loader.di import Container
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -65,9 +65,10 @@ async def send_ball_response(message: Message) -> None:
 
 
 @router.message(RegexSearch(r"youtu(\.be|be\.com)"))
-async def send_youtube_link(message: Message, tg_ids: "TelegramIds") -> None:
+async def send_youtube_link(message: Message, ioc: "Container") -> None:
     logger.info("starting to do send_youtube_link")
 
+    tg_ids = ioc.config.tg_ids
     bot_answer = await message.answer("I got it! downloading...")
     bot_answer_id = bot_answer.message_id
 

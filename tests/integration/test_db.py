@@ -12,6 +12,12 @@ def test_engine_driver(engine: AsyncEngine) -> None:
 
 
 @pytest.mark.asyncio
-async def test_ping_db(conn: AsyncConnection) -> None:
-    result = await conn.execute(text("select 'hello world'"))
+async def test_ping_db(new_session: AsyncConnection) -> None:
+    result = await new_session.execute(text("select 'hello world'"))
     assert result.one()[0] == "hello world"
+
+
+@pytest.mark.asyncio
+async def test_version(new_session: AsyncConnection) -> None:
+    result = await new_session.execute(text("select version()"))
+    assert "PostgreSQL 16.3" in result.one()[0]

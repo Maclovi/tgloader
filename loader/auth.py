@@ -6,7 +6,8 @@ from pathlib import Path
 import pytube.auth
 from pytube import YouTube
 
-from loader.config import Config, load_config
+from loader.config import Config
+from loader.ioc import init_container
 from loader.tgclient.client import get_client
 
 logger = logging.getLogger(__name__)
@@ -81,7 +82,7 @@ def auth_all(conf: Config) -> None:
 
 
 def main() -> None:
-    conf = load_config()
+    conf = init_container().config
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     auth_all(conf)
 

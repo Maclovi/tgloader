@@ -1,14 +1,18 @@
-from collections.abc import AsyncGenerator
-from typing import cast
+from collections.abc import AsyncIterable
+from typing import TYPE_CHECKING, Literal, TypeAlias, cast
 
 import pytest
 from sqlalchemy.ext.asyncio import (
-    AsyncConnection,
     AsyncEngine,
-    create_async_engine,
+    AsyncSession,
 )
 
-from loader.config import Config, load_config
+from loader.ioc import Container, init_container
+
+if TYPE_CHECKING:
+    from loader.config import Config
+
+Env: TypeAlias = Literal["dev", "prod"]
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:
@@ -17,27 +21,31 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         action="store",
         default="dev",
         help="my option: dev or prod",
+        choices=["prod", "dev"],
     )
 
 
 @pytest.fixture(scope="session")
-def env(request: pytest.FixtureRequest) -> str:
-    return cast(str, request.config.getoption("--env"))
+def env(request: pytest.FixtureRequest) -> Env:
+    return cast(Env, request.config.getoption("--env"))
 
 
 @pytest.fixture(scope="session")
-def config(env: str) -> Config:
-    return load_config(env + ".ini")
+def ioc(env: Env) -> Container:
+    return init_container(env=env)
 
 
 @pytest.fixture(scope="session")
-def engine(config: Config) -> AsyncEngine:
-    db = config.db
-    engine = create_async_engine(f"postgresql+psycopg://{db.get_uri()}")
-    return engine
+def config(ioc: Container) -> "Config":
+    return ioc.config
+
+
+@pytest.fixture(scope="session")
+def engine(ioc: Container) -> AsyncEngine:
+    return ioc._engine
 
 
 @pytest.fixture
-async def conn(engine: AsyncEngine) -> AsyncGenerator[AsyncConnection, None]:
-    async with engine.connect() as conn:
-        yield conn
+async def new_session(ioc: "Container") -> AsyncIterable[AsyncSession]:
+    async with ioc.session_maker() as session:
+        yield session

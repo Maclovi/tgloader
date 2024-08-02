@@ -10,16 +10,17 @@ from loader.domain.schemes import YouTubeDTO
 from loader.domain.services.youtube import process_get_needed_data
 
 if TYPE_CHECKING:
-    from loader.config import TelegramIds
+    from loader.ioc import Container
 
 logger = logging.getLogger(__name__)
 
 
-async def send_file_bot(event: NewMessage.Event, ids: "TelegramIds") -> None:
+async def send_file_bot(event: NewMessage.Event, ioc: "Container") -> None:
     logger.info("starting to do send_file_bot")
 
     client = cast(TelegramClient, event.client)
     yt_dto = YouTubeDTO.to_dict(event.raw_text.replace("youtube", "", 1))
+    bot_id = ioc.config.tg_ids.bot_id
 
     try:
         start = time.time()
@@ -29,7 +30,7 @@ async def send_file_bot(event: NewMessage.Event, ids: "TelegramIds") -> None:
             datas.audio, file_size=datas.ytube.file_size, part_size_kb=512
         )
         await client.send_file(
-            ids.bot_id,
+            bot_id,
             file,
             attributes=[datas.audioattr],
             caption="youtube" + yt_dto.to_json(),
@@ -40,28 +41,33 @@ async def send_file_bot(event: NewMessage.Event, ids: "TelegramIds") -> None:
     except Exception as e:
         logger.error(e)
         yt_dto.error_info = str(e)
-        await client.send_message(ids.bot_id, "errors" + yt_dto.to_json())
+        await client.send_message(bot_id, "errors" + yt_dto.to_json())
 
 
 async def proxy_for_success_files(
-    event: NewMessage.Event, ids: "TelegramIds"
+    event: NewMessage.Event, ioc: "Container"
 ) -> None:
     logger.info("starting to do proxy_for_success_files")
 
+    bot_id = ioc.config.tg_ids.bot_id
     client = cast(TelegramClient, event.client)
-    await client.send_message(ids.bot_id, event.raw_text)
+    await client.send_message(bot_id, event.raw_text)
 
 
-def include_events_handlers(
-    client: TelegramClient, tg_ids: "TelegramIds"
-) -> None:
+def include_events_handlers(client: TelegramClient, ioc: "Container") -> None:
     client.add_event_handler(
-        partial(send_file_bot, ids=tg_ids),
-        NewMessage(chats=[tg_ids.bot_id], incoming=True, pattern=r"^youtube."),
+        partial(send_file_bot, ioc=ioc),
+        NewMessage(
+            chats=[ioc.config.tg_ids.bot_id],
+            incoming=True,
+            pattern=r"^youtube.",
+        ),
     )
     client.add_event_handler(
-        partial(proxy_for_success_files, ids=tg_ids),
+        partial(proxy_for_success_files, ioc=ioc),
         NewMessage(
-            chats=[tg_ids.bot_id], incoming=True, pattern=r"^final_common_file."
+            chats=[ioc.config.tg_ids.bot_id],
+            incoming=True,
+            pattern=r"^final_common_file.",
         ),
     )

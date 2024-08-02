@@ -8,7 +8,7 @@ from loader.domain.schemes import BaseDTO, YouTubeDTO
 from loader.tgbot.filters.user import IsClient
 
 if TYPE_CHECKING:
-    from loader.config import TelegramIds
+    from loader.di import Container
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -16,9 +16,10 @@ router.message.filter(IsClient())
 
 
 @router.message(F.caption.startswith("youtube"))
-async def send_file_id_client(message: Message, tg_ids: "TelegramIds") -> None:
+async def send_file_id_client(message: Message, ioc: "Container") -> None:
     logger.info("starting to do send_file_id_client")
 
+    tg_ids = ioc.config.tg_ids
     bot = cast(Bot, message.bot)
     user = cast(User, message.from_user)
     audio = cast(Audio, message.audio)
@@ -45,9 +46,10 @@ async def send_file_id_client(message: Message, tg_ids: "TelegramIds") -> None:
 
 
 @router.message(F.text.startswith("final_common_file"))
-async def send_file_customer(message: Message, tg_ids: "TelegramIds") -> None:
+async def send_file_customer(message: Message, ioc: "Container") -> None:
     logger.info("starting to do send_file_customer")
 
+    tg_ids = ioc.config.tg_ids
     txt = cast(str, message.text)
     bot = cast(Bot, message.bot)
 
@@ -63,9 +65,10 @@ async def send_file_customer(message: Message, tg_ids: "TelegramIds") -> None:
 
 
 @router.message(F.text.startswith("errors"))
-async def send_errors(message: Message, tg_ids: "TelegramIds") -> None:
+async def send_errors(message: Message, ioc: "Container") -> None:
     logger.info("starting to do send_errors")
 
+    tg_ids = ioc.config.tg_ids
     bot = cast(Bot, message.bot)
     txt = cast(str, message.text)
 
