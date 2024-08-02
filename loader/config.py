@@ -1,9 +1,8 @@
 import configparser
 from dataclasses import dataclass
-from functools import lru_cache
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class DbConfig:
     user: str
     password: str
@@ -20,21 +19,21 @@ class DbConfig:
         )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class TgBot:
     token: str
     use_redis: bool
     debug: bool
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class TgClient:
     api_id: int
     api_hash: str
     debug: bool
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class TelegramIds:
     bot_id: int
     boss_id: int
@@ -43,7 +42,7 @@ class TelegramIds:
     group_cache_id: int
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Config:
     tg_bot: TgBot
     tg_client: TgClient
@@ -51,7 +50,6 @@ class Config:
     tg_ids: TelegramIds
 
 
-@lru_cache
 def load_config(path: str) -> Config:
     config = read_conf(path)
 

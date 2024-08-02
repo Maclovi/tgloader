@@ -4,9 +4,9 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
+COPY pyproject.toml .
+RUN pip install uv && uv pip install --no-cache --system .
+
 COPY . .
 
-RUN apt-get update &&\
-    apt-get install -y git &&\
-    python3.12 -m pip install --upgrade pip &&\
-    python3.12 -m pip install .
+RUN pip install uv && uv pip install --no-cache --system -e .

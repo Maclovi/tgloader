@@ -46,6 +46,6 @@ def engine(ioc: Container) -> AsyncEngine:
 
 
 @pytest.fixture
-async def new_session(ioc: "Container") -> AsyncIterable[AsyncSession]:
+async def new_session(ioc: Container) -> AsyncIterable[AsyncSession]:
     async with ioc.session_maker() as session:
         yield session

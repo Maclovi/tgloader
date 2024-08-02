@@ -18,7 +18,7 @@ class Container:
     _engine: AsyncEngine
 
 
-def make_engine(db_uri: str) -> AsyncEngine:
+def create_engine(db_uri: str) -> AsyncEngine:
     engine = create_async_engine(
         db_uri,
         echo=True,
@@ -39,7 +39,7 @@ def make_asyncsession(
 
 def init_container(*, env: Literal["prod", "dev"] = "prod") -> Container:
     conf = load_config(env + ".ini")
-    engine = make_engine(conf.db.db_uri)
+    engine = create_engine(conf.db.db_uri)
     session_maker = make_asyncsession(engine)
 
     return Container(config=conf, session_maker=session_maker, _engine=engine)

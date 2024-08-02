@@ -29,7 +29,7 @@ keywords = [
     "telegram",
 ]
 dependencies = [
-    "pytube @ git+https://github.com/Maclovi/pytube.git",
+    "pytube @ https://github.com/Maclovi/pytube/archive/master.zip",
     "aiogram>=3,<4",
     "telethon>=1,<2",
     "cryptg",
