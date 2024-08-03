@@ -1,15 +1,14 @@
-from sqlalchemy import Column, Integer, MetaData, String, Table
+from sqlalchemy import Column, Integer, String, Table
 from sqlalchemy.orm import registry
 
 from loader.domain.models import File, User
 
-metadata_obj = MetaData()
 mapper_registry = registry()
 
 
 user = Table(
     "user_account",
-    metadata_obj,
+    mapper_registry.metadata,
     Column("id", Integer, primary_key=True),
     Column("first_name", String(254)),
     Column("last_name", String(254)),
@@ -22,7 +21,7 @@ user = Table(
 
 file = Table(
     "file",
-    metadata_obj,
+    mapper_registry.metadata,
     Column("video_id", String(254), primary_key=True),
     Column("file_id", String(254)),
     Column("message_id", Integer),
