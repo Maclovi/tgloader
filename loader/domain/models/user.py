@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 
-@dataclass(slots=True)
+@dataclass
 class User:
     id: int
     first_name: str
