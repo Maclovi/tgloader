@@ -34,6 +34,7 @@ class TestUser:
     async def test_add_user(self, database: DatabaseGateway) -> None:
         user = User(1, "Sergey", "Yavorsky", "somenick", "active")
         await database.add_user(user)
+        await database.session.commit()
 
     @pytest.mark.asyncio
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
@@ -48,6 +49,7 @@ class TestUser:
     @pytest.mark.asyncio
     async def test_do_update(self, database: DatabaseGateway) -> None:
         await database.update_user_status(1, "inactive")
+        await database.session.commit()
 
     @pytest.mark.asyncio
     async def test_user_update(self, database: DatabaseGateway) -> None:
@@ -61,6 +63,7 @@ class TestFile:
     async def test_add_file(self, database: DatabaseGateway) -> None:
         file = File("dasf", "dafsgd", 321)
         await database.add_file(file)
+        await database.session.commit()
 
     @pytest.mark.asyncio
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
@@ -79,6 +82,7 @@ class TestUserFile:
     async def test_add_userfile(self, database: DatabaseGateway) -> None:
         userfile = UserFile(1, "dasf")
         await database.add_userfile(userfile)
+        await database.session.commit()
 
     @pytest.mark.asyncio
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
@@ -87,6 +91,7 @@ class TestUserFile:
 
     @pytest.mark.xfail(raises=IntegrityError)
     @pytest.mark.asyncio
-    async def test_add_no_exists(self, database: DatabaseGateway) -> None:
+    async def test_add_user_no_exists(self, database: DatabaseGateway) -> None:
         userfile = UserFile(2, "dasf")
         await database.add_userfile(userfile)
+        await database.session.commit()

@@ -35,7 +35,6 @@ class UserMapper(Session, UserMapperProtocol):
 
     async def add_user(self, user: User) -> None:
         self.session.add(user)
-        await self.session.commit()
 
     async def get_user_by_id(self, id: int) -> User | None:
         stmt = select(user).where(user.c.id == id)
@@ -46,7 +45,6 @@ class UserMapper(Session, UserMapperProtocol):
     async def update_user_status(self, id: int, new_status: Status) -> None:
         stmt = update(user).where(user.c.id == id).values(status=new_status)
         await self.session.execute(stmt)
-        await self.session.commit()
 
 
 class FileMapper(Session, FileMapperProtocol):
@@ -55,7 +53,6 @@ class FileMapper(Session, FileMapperProtocol):
 
     async def add_file(self, file: File) -> None:
         self.session.add(file)
-        await self.session.commit()
 
     async def get_file_by_video_id(self, video_id: str) -> File | None:
         stmt = select(file).where(file.c.video_id == video_id)
@@ -70,7 +67,6 @@ class UserFileMapper(Session, UserFileMapperProtocol):
 
     async def add_userfile(self, userfile: UserFile) -> None:
         self.session.add(userfile)
-        await self.session.commit()
 
 
 class DatabaseGateway(UserMapper, FileMapper, UserFileMapper): ...
