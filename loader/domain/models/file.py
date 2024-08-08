@@ -1,11 +1,11 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
 
-@dataclass
+@dataclass(order=True)
 class File:
     video_id: str
     file_id: str
     message_id: int
-    created_at: datetime
-    updated_at: datetime
+    created_at: datetime = field(init=False)
+    updated_at: datetime = field(init=False)

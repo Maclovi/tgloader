@@ -15,7 +15,7 @@ readme = "README.md"
 authors = [
     { name = "Sergey Yavorsky", email = "yavorskyserge@gmail.com" },
 ]
-version = "0.0.1"
+version = "0.0.2"
 requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -51,6 +51,11 @@ Documentation = "https://github.com/Maclovi/tgloader"
 
 [tool.pytest.ini_options]
 addopts = "--asyncio-mode=auto"
+markers = [
+    "db_user",
+    "db_file",
+    "engine",
+]
 testpaths = [
     "tests",
     "integration",
