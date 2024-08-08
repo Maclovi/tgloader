@@ -3,6 +3,7 @@ __all__ = [
     "DatabaseGatewayProtocol",
     "FileMapperProtocol",
     "StreamProto",
+    "UserFileMapperProtocol",
     "UserMapperProtocol",
     "YouTubeProto",
 ]
@@ -15,5 +16,6 @@ from .contracts import (
 from .database import (
     DatabaseGatewayProtocol,
     FileMapperProtocol,
+    UserFileMapperProtocol,
     UserMapperProtocol,
 )

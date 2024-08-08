@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Protocol
 from loader.domain.common import Status
 
 if TYPE_CHECKING:
-    from loader.domain.models import File, User
+    from loader.domain.models import File, User, UserFile
 
 
 class UserMapperProtocol(Protocol):
@@ -26,5 +26,11 @@ class FileMapperProtocol(Protocol):
     async def get_file_by_video_id(self, video_id: str) -> "File | None": ...
 
 
-class DatabaseGatewayProtocol(UserMapperProtocol, FileMapperProtocol):
-    pass
+class UserFileMapperProtocol(Protocol):
+    @abstractmethod
+    async def add_userfile(self, userfile: "UserFile") -> None: ...
+
+
+class DatabaseGatewayProtocol(
+    UserMapperProtocol, FileMapperProtocol, UserFileMapperProtocol
+): ...

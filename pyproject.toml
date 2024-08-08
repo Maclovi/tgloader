@@ -51,10 +51,12 @@ Documentation = "https://github.com/Maclovi/tgloader"
 
 [tool.pytest.ini_options]
 addopts = "--asyncio-mode=auto"
+xfail_strict=true
 markers = [
+    "engine",
     "db_user",
     "db_file",
-    "engine",
+    "db_userfile",
 ]
 testpaths = [
     "tests",

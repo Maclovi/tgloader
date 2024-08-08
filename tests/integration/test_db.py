@@ -1,9 +1,10 @@
 import pytest
 from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from loader.adapters.database.gateway import DatabaseGateway
-from loader.domain.models import File, User
+from loader.domain.models import File, User, UserFile
 
 
 @pytest.mark.engine
@@ -37,7 +38,7 @@ class TestUser:
     @pytest.mark.asyncio
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
         user = User(1, "Sergey", "Yavorsky", "somenick", "active")
-        await database.add_user(user)
+        await database.add_if_possible(user)
 
     @pytest.mark.asyncio
     async def test_get_user(self, database: DatabaseGateway) -> None:
@@ -64,9 +65,28 @@ class TestFile:
     @pytest.mark.asyncio
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
         file = File("dasf", "dafsgd", 321)
-        await database.add_file(file)
+        await database.add_if_possible(file)
 
     @pytest.mark.asyncio
     async def test_file_by_video_id(self, database: DatabaseGateway) -> None:
         file = await database.get_file_by_video_id("dasf")
         assert file == File("dasf", "dafsgd", 321)
+
+
+@pytest.mark.db_userfile
+class TestUserFile:
+    @pytest.mark.asyncio
+    async def test_add_userfile(self, database: DatabaseGateway) -> None:
+        userfile = UserFile(1, "dasf")
+        await database.add_userfile(userfile)
+
+    @pytest.mark.asyncio
+    async def test_add_already_exists(self, database: DatabaseGateway) -> None:
+        userfile = UserFile(1, "dasf")
+        await database.add_if_possible(userfile)
+
+    @pytest.mark.xfail(raises=IntegrityError)
+    @pytest.mark.asyncio
+    async def test_add_no_exists(self, database: DatabaseGateway) -> None:
+        userfile = UserFile(2, "dasf")
+        await database.add_userfile(userfile)
