@@ -36,8 +36,8 @@ file = Table(
     "file",
     mapper_registry.metadata,
     Column("video_id", String(256), primary_key=True),
-    Column("file_id", String(256), nullable=False),
-    Column("message_id", Integer, nullable=False),
+    Column("file_id", String(256), nullable=False, unique=True),
+    Column("message_id", Integer, nullable=False, unique=True),
     Column(
         "created_at",
         DateTime,
