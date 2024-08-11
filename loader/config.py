@@ -1,5 +1,5 @@
-import configparser
 from dataclasses import dataclass
+from os import environ as env
 
 
 @dataclass(frozen=True, slots=True)
@@ -9,14 +9,7 @@ class DbConfig:
     database: str
     host: str
     port: str
-
-    @property
-    def db_uri(self) -> str:
-        return (
-            f"postgresql+psycopg://"
-            f"{self.user}:{self.password}@{self.host}:{self.port}/"
-            f"{self.database}?sslmode=require"
-        )
+    db_uri: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -36,7 +29,6 @@ class TgClient:
 @dataclass(frozen=True, slots=True)
 class TelegramIds:
     bot_id: int
-    boss_id: int
     client_id: int
     group_error_id: int
     group_cache_id: int
@@ -50,36 +42,30 @@ class Config:
     tg_ids: TelegramIds
 
 
-def load_config(path: str) -> Config:
-    config = read_conf(path)
-
-    tg_bot = config["bot"]
-    tg_client = config["client"]
-    tg_ids = config["telegram_ids"]
-
+def load_config() -> Config:
     return Config(
         tg_bot=TgBot(
-            token=tg_bot.get("token"),
-            use_redis=tg_bot.getboolean("use_redis"),
-            debug=tg_bot.getboolean("debug"),
+            token=env["TOKEN"],
+            use_redis=env["USE_REDIS"] == "true",
+            debug=env["DEBUG"] == "true",
         ),
         tg_client=TgClient(
-            api_id=tg_client.getint("api_id"),
-            api_hash=tg_client.get("api_hash"),
-            debug=tg_client.getboolean("debug"),
+            api_id=int(env["API_ID"]),
+            api_hash=env["API_HASH"],
+            debug=env["DEBUG"] == "true",
         ),
         tg_ids=TelegramIds(
-            bot_id=tg_ids.getint("bot_id"),
-            boss_id=tg_ids.getint("boss_id"),
-            client_id=tg_ids.getint("client_id"),
-            group_error_id=tg_ids.getint("group_error_id"),
-            group_cache_id=tg_ids.getint("group_cache_id"),
+            bot_id=int(env["BOT_ID"]),
+            client_id=int(env["CLIENT_ID"]),
+            group_error_id=int(env["GROUP_ERROR_ID"]),
+            group_cache_id=int(env["GROUP_CACHE_ID"]),
         ),
-        db=DbConfig(**config["db"]),
+        db=DbConfig(
+            env["USER"],
+            env["PASSWORD"],
+            env["DATABASE"],
+            env["HOST"],
+            env["PORT"],
+            "postgresql+psycopg" + env["DB_URI"].replace("postgres", "", 1),
+        ),
     )
-
-
-def read_conf(path: str) -> configparser.ConfigParser:
-    config = configparser.ConfigParser()
-    config.read(path)
-    return config

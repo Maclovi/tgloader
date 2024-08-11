@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Literal
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -37,8 +36,8 @@ def make_asyncsession(
     return async_sessionmaker(engine, autoflush=False, expire_on_commit=False)
 
 
-def init_container(*, env: Literal["prod", "dev"] = "prod") -> Container:
-    conf = load_config(env + ".ini")
+def init_container() -> Container:
+    conf = load_config()
     engine = create_engine(conf.db.db_uri)
     session_maker = make_asyncsession(engine)
 

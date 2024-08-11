@@ -1,14 +1,14 @@
 venv/
+.venv/
 build/
 loader.egg-info/
 
 # sensitive
-config.ini
-prod.ini
-dev.ini
-me.session
 .sens/
+me.session
 tests/unit/test_env.py
+config_prod.sh
+config_dev.sh
 
 # cache
 *__pycache__

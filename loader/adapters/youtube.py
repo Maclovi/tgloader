@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from typing import cast
 from urllib.parse import urlparse
 
-from pytube import YouTube
-from pytube.streams import Stream
+from pytubefix import YouTube
+from pytubefix.streams import Stream
 
 from loader.domain.protocols import YouTubeProto
 

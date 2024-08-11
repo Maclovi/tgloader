@@ -27,7 +27,7 @@ def env(request: pytest.FixtureRequest) -> Env:
 
 @pytest.fixture(scope="session")
 def ioc(env: Env) -> Container:
-    return init_container(env=env)
+    return init_container()
 
 
 @pytest.fixture(scope="session")
