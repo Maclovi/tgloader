@@ -13,7 +13,7 @@
 
 ### Requirements
 
-- Python 3.10 or higher
+- Python 3.11 or higher
 - PostgreSQL 16 or higher
 - Telegram bot token (from [BotFather](https://t.me/botfather))
 - Telegram application with **api_id & api_hash** ([create client](https://my.telegram.org/))
@@ -33,7 +33,7 @@ cd tgloader
 Install the required Python libraries:
 
 ```bash
-pip install .
+pip install -e .
 ```
 ### How to start
 1. Edit code in a corresponding way
@@ -44,7 +44,7 @@ pip install .
 
 Run the bot:
 ```bash
-runbot
+docker compose up -d
 ```
 ### Authorization
 

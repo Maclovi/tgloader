@@ -24,13 +24,13 @@ async def create_all_tables(async_engine: AsyncEngine) -> AsyncIterator[None]:
         await conn.run_sync(mapper_registry.metadata.drop_all)
 
 
-@pytest.fixture
+@pytest.fixture()
 async def new_session(ioc: Container) -> AsyncIterator[AsyncSession]:
     async with ioc.session_maker() as session:
         yield session
 
 
-@pytest.fixture
+@pytest.fixture()
 async def database(ioc: Container) -> AsyncIterator[DatabaseGateway]:
     async with ioc.session_maker() as session:
         yield DatabaseGateway(session)

@@ -8,7 +8,7 @@ from loader.domain.schemes import BaseDTO, YouTubeDTO
 from loader.tgbot.filters.user import IsClient
 
 if TYPE_CHECKING:
-    from loader.di import Container
+    from loader.ioc import Container
 
 logger = logging.getLogger(__name__)
 router = Router()
