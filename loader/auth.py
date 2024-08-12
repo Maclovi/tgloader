@@ -3,8 +3,7 @@ import shutil
 import sys
 from pathlib import Path
 
-import pytube.auth
-from pytube import YouTube
+import pytubefix
 
 from loader.config import Config
 from loader.ioc import init_container
@@ -16,32 +15,31 @@ logger = logging.getLogger(__name__)
 class AuthYouTube:
     def __init__(self, config: Config) -> None:
         self.config = config
+        self.path_yt = Path(pytubefix.__file__).parent.resolve()
 
     def _auth(self) -> None:
-        _ = YouTube(
+        _ = pytubefix.YouTube(
             "https://youtu.be/UprwkbzUX6g?si=pWBvtXGTlTMR8QLG",
             use_oauth=True,
             allow_oauth_cache=True,
         ).streams
 
-    def _auth_hadler(self) -> None:
+    def _auth_handler(self) -> None:
         tokens = Path(".sens/tokens.json").resolve()
-        path_yt = Path(pytube.auth.__file__).parent.resolve()
-        if tokens.exists():
+        if tokens.exists() and self.path_yt:
             logger.info("coping tokens.json to pytube dir base")
-            (path_yt / "__cache__").mkdir()
-            shutil.copy(tokens, path_yt / "__cache__/tokens.json")
+            (self.path_yt / "__cache__").mkdir()
+            shutil.copy(tokens, self.path_yt / "__cache__/tokens.json")
         else:
             logger.info("Authorize user youtube account")
             self._auth()
 
     def _check_cache_pytube(self) -> bool:
-        base = Path(pytube.auth.__file__).parent.resolve()
-        return (base / "__cache__" / "tokens.json").exists()
+        return (self.path_yt / "__cache__" / "tokens.json").exists()
 
     def auth(self) -> None:
         if not self._check_cache_pytube():
-            return self._auth_hadler()
+            return self._auth_handler()
 
         logger.info("YouTube is authorized")
 

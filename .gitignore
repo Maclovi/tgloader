@@ -5,6 +5,7 @@ loader.egg-info/
 
 # sensitive
 .sens/
+.env
 me.session
 tests/unit/test_env.py
 config_prod.sh

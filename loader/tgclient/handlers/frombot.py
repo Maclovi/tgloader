@@ -39,7 +39,7 @@ async def send_file_bot(event: NewMessage.Event, ioc: "Container") -> None:
         )
         logger.info(f"audio downloaded for {time.time() - start:.3f} seconds")
     except Exception as e:
-        logger.error(e)
+        logger.error(e, stack_info=True)
         yt_dto.error_info = str(e)
         await client.send_message(bot_id, "errors" + yt_dto.to_json())
 

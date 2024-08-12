@@ -5,7 +5,7 @@ import sys
 from collections.abc import Awaitable
 from multiprocessing import Process
 from subprocess import run as run_shell
-from typing import cast
+from typing import Final, cast
 
 from aiogram import Bot, Dispatcher
 from telethon.tl.types import User
@@ -16,6 +16,7 @@ from loader.tgclient.client import get_client
 from loader.tgclient.handlers import frombot
 
 logger = logging.getLogger(__name__)
+FORMAT: Final = "[%(asctime)s] [%(name)s]" "[%(levelname)s] > %(message)s"
 
 
 async def tgbot_main() -> None:
@@ -25,7 +26,7 @@ async def tgbot_main() -> None:
     if container.config.tg_bot.debug:
         level = logging.DEBUG
 
-    logging.basicConfig(level=level, stream=sys.stdout)
+    logging.basicConfig(level=level, stream=sys.stdout, format=FORMAT)
 
     bot = Bot(token=container.config.tg_bot.token)
     dp = Dispatcher(ioc=container)
@@ -42,7 +43,7 @@ async def tgclient_main() -> None:
     if container.config.tg_bot.debug:
         level = logging.DEBUG
 
-    logging.basicConfig(level=level, stream=sys.stdout)
+    logging.basicConfig(level=level, stream=sys.stdout, format=FORMAT)
     client = get_client(container.config.tg_client)
     frombot.include_events_handlers(client, container)
 
@@ -76,7 +77,7 @@ def cli() -> None:
     args = parser.parse_args()
 
     if args.run in ("all", "client"):
-        run_shell(["python", "loader/auth.py"])
+        run_shell(["python", "loader/auth.py"], check=True)
 
     if args.run == "all":
         _ = run_tgclient_process()

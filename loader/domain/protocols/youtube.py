@@ -1,9 +1,12 @@
-from collections.abc import Iterable
+from collections.abc import Iterator
 from typing import Protocol
 
 
 class StreamProto(Protocol):
-    def get_chunks(self, chunk_size: int | None = None) -> Iterable[bytes]:
+    @property
+    def filesize(self) -> int: ...
+
+    def get_chunks(self, chunk_size: int | None = None) -> Iterator[bytes]:
         yield b""
 
 

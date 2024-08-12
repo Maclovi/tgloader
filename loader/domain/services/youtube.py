@@ -1,5 +1,5 @@
 from logging import getLogger
-from typing import BinaryIO, NamedTuple, cast
+from typing import TYPE_CHECKING, BinaryIO, NamedTuple, cast
 
 import aiohttp
 from telethon.tl.types import DocumentAttributeAudio
@@ -7,11 +7,14 @@ from telethon.tl.types import DocumentAttributeAudio
 from loader.adapters.input_file import InputAudioTube
 from loader.adapters.youtube import YouTubeAdapter
 
+if TYPE_CHECKING:
+    from loader.domain.protocols.youtube import YouTubeProto
+
 logger = getLogger(__name__)
 
 
 class ComplectedDataForTelethon(NamedTuple):
-    ytube: YouTubeAdapter
+    ytube: "YouTubeProto"
     audio: BinaryIO
     audioattr: DocumentAttributeAudio
     thumb: bytes

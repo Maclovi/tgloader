@@ -61,11 +61,11 @@ def load_config() -> Config:
             group_cache_id=int(env["GROUP_CACHE_ID"]),
         ),
         db=DbConfig(
-            env["USER"],
-            env["PASSWORD"],
-            env["DATABASE"],
-            env["HOST"],
-            env["PORT"],
+            env["DB_USER"],
+            env["DB_PASSWORD"],
+            env["DB_DATABASE"],
+            env["DB_HOST"],
+            env["DB_PORT"],
             "postgresql+psycopg" + env["DB_URI"].replace("postgres", "", 1),
         ),
     )

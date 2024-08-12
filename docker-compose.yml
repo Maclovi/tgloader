@@ -2,7 +2,7 @@ services:
   bot:
     build: .
     container_name: loader-bot
-    env_file: prod.ini
+    env_file: .env
     command: tgloader --run=bot
     restart: always
     depends_on:
@@ -10,6 +10,6 @@ services:
   client:
     build: .
     container_name: loader-client
-    env_file: prod.ini
+    env_file: .env
     command: tgloader --run=client
     restart: always
