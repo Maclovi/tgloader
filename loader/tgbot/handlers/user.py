@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING, cast
 from aiogram import Bot, F, Router
 from aiogram.types import ChatMemberUpdated, Message, User
 
+from loader.application import UserDatabase
+from loader.domain.models import User as DBUser
 from loader.domain.schemes import YouTubeDTO
 
 from ..filters.user import (
@@ -23,8 +25,19 @@ router.message.filter(F.chat.type == "private")
 
 
 @router.message(CommandStart())
-async def proccess_cmd_start(message: Message) -> None:
+async def proccess_cmd_start(message: Message, ioc: "Container") -> None:
     logger.info("starting to do proccess_cmd_start")
+
+    tg_user = cast(User, message.from_user)
+    domain_user = DBUser(
+        id=tg_user.id,
+        first_name=tg_user.first_name,
+        last_name=tg_user.last_name,
+        username=tg_user.username,
+        status="active",
+    )
+    async with ioc.new_session() as database:
+        await UserDatabase(database).create_user(domain_user)
 
     await message.answer("Hello")
 

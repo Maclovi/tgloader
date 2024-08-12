@@ -1,6 +1,6 @@
 from typing import TypeAlias
 
-from sqlalchemy import Row, exc, select, update
+from sqlalchemy import Row, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from loader.adapters.database.models import file, user
@@ -18,15 +18,6 @@ AllowedDataclasses: TypeAlias = User | File | UserFile
 class Session:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
-
-    async def add_if_possible(self, obj: AllowedDataclasses) -> bool:
-        try:
-            self.session.add(obj)
-            await self.session.commit()
-            return True
-        except exc.IntegrityError:
-            await self.session.rollback()
-            return False
 
 
 class UserMapper(Session, UserMapperProtocol):
@@ -54,7 +45,7 @@ class FileMapper(Session, FileMapperProtocol):
     async def add_file(self, file: File) -> None:
         self.session.add(file)
 
-    async def get_file_by_video_id(self, video_id: str) -> File | None:
+    async def get_file_by_videoid(self, video_id: str) -> File | None:
         stmt = select(file).where(file.c.video_id == video_id)
         row = (await self.session.execute(stmt)).one_or_none()
 

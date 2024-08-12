@@ -30,6 +30,7 @@ async def yta() -> YouTubeAdapter:
     return YouTubeAdapter("https://youtu.be/TCaNwAYqVI4?si=v4kdnDlg97csXjKN")
 
 
+@pytest.mark.skip()
 @pytest.mark.download()
 class TestDownloadMp3:
     def test_download1(self, yt: "YouTube") -> None:

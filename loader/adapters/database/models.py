@@ -21,7 +21,7 @@ user = Table(
     Column("first_name", String(256)),
     Column("last_name", String(256)),
     Column("username", String(256)),
-    Column("status", String(8)),
+    Column("status", String(8), nullable=False),
     Column(
         "created_at",
         DateTime,

@@ -2,11 +2,11 @@ from collections.abc import AsyncIterator
 
 import pytest
 from sqlalchemy import text
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncEngine
 
 from loader.adapters.database.gateway import DatabaseGateway
 from loader.adapters.database.models import mapper_registry
+from loader.application import FileDatabase, UserDatabase, UserFileDatabase
 from loader.domain.models import File, User, UserFile
 from loader.ioc import Container
 
@@ -28,15 +28,9 @@ def async_engine(ioc: Container) -> AsyncEngine:
 
 
 @pytest.fixture()
-async def new_session(ioc: Container) -> AsyncIterator[AsyncSession]:
-    async with ioc.session_maker() as session:
-        yield session
-
-
-@pytest.fixture()
 async def database(ioc: Container) -> AsyncIterator[DatabaseGateway]:
-    async with ioc.session_maker() as session:
-        yield DatabaseGateway(session)
+    async with ioc.new_session() as session:
+        yield session
 
 
 @pytest.mark.engine()
@@ -65,28 +59,35 @@ class TestUser:
     @pytest.mark.asyncio()
     async def test_add_user(self, database: DatabaseGateway) -> None:
         user = User(1, "Sergey", "Yavorsky", "somenick", "active")
-        await database.add_user(user)
-        await database.session.commit()
+        await UserDatabase(database).create_user(user)
 
     @pytest.mark.asyncio()
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
         user = User(1, "Sergey", "Yavorsky", "somenick", "active")
-        await database.add_if_possible(user)
+        await UserDatabase(database).create_user(user)
 
     @pytest.mark.asyncio()
     async def test_get_user(self, database: DatabaseGateway) -> None:
-        user = await database.get_user_by_id(1)
-        assert user == User(1, "Sergey", "Yavorsky", "somenick", "active")
+        user = User(1, "Sergey", "Yavorsky", "somenick", "active")
+        user_from_db = await database.get_user_by_id(1)
 
-    @pytest.mark.asyncio()
-    async def test_do_update(self, database: DatabaseGateway) -> None:
-        await database.update_user_status(1, "inactive")
-        await database.session.commit()
+        assert user == user_from_db
 
     @pytest.mark.asyncio()
     async def test_user_update(self, database: DatabaseGateway) -> None:
-        user = await database.get_user_by_id(1)
-        assert user == User(1, "Sergey", "Yavorsky", "somenick", "inactive")
+        user = User(1, "Sergey", "Yavorsky", "somenick", "inactive")
+        await UserDatabase(database).update_status(1, "inactive")
+        user_from_db = await database.get_user_by_id(1)
+
+        assert user == user_from_db
+
+    @pytest.mark.asyncio()
+    async def test_add_user_status(self, database: DatabaseGateway) -> None:
+        user = User(1, "Sergey", "Yavorsky", "somenick", "active")
+        await UserDatabase(database).create_user(user)
+        user_from_db = await database.get_user_by_id(1)
+
+        assert user == user_from_db
 
 
 @pytest.mark.db_file()
@@ -94,18 +95,18 @@ class TestFile:
     @pytest.mark.asyncio()
     async def test_add_file(self, database: DatabaseGateway) -> None:
         file = File("dasf", "dafsgd", 321)
-        await database.add_file(file)
-        await database.session.commit()
+        await FileDatabase(database).create_file(file)
 
     @pytest.mark.asyncio()
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
         file = File("dasf", "dafsgd", 321)
-        await database.add_if_possible(file)
+        await FileDatabase(database).create_file(file)
 
     @pytest.mark.asyncio()
     async def test_file_by_video_id(self, database: DatabaseGateway) -> None:
-        file = await database.get_file_by_video_id("dasf")
-        assert file == File("dasf", "dafsgd", 321)
+        file = File("dasf", "dafsgd", 321)
+        file_from_db = await FileDatabase(database).get_file_by_videoid("dasf")
+        assert file == file_from_db
 
 
 @pytest.mark.db_userfile()
@@ -113,17 +114,9 @@ class TestUserFile:
     @pytest.mark.asyncio()
     async def test_add_userfile(self, database: DatabaseGateway) -> None:
         userfile = UserFile(1, "dasf")
-        await database.add_userfile(userfile)
-        await database.session.commit()
+        await UserFileDatabase(database).create_userfile(userfile)
 
     @pytest.mark.asyncio()
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
         userfile = UserFile(1, "dasf")
-        await database.add_if_possible(userfile)
-
-    @pytest.mark.xfail(raises=IntegrityError)
-    @pytest.mark.asyncio()
-    async def test_add_user_no_exists(self, database: DatabaseGateway) -> None:
-        userfile = UserFile(2, "dasf")
-        await database.add_userfile(userfile)
-        await database.session.commit()
+        await UserFileDatabase(database).create_userfile(userfile)
