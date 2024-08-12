@@ -15,7 +15,7 @@ export CLIENT_ID=id your client for telethon
 export GROUP_ERROR_ID=group id to send errors, you should add the bot to the group
 export GROUP_CACHE_ID=group id for cache files
 
-# db
+# db postgres
 export USER=postgres
 export PASSWORD=postgres
 export DATABASE=defaultdb

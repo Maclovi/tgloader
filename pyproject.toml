@@ -57,6 +57,7 @@ markers = [
     "db_user",
     "db_file",
     "db_userfile",
+    "download",
 ]
 testpaths = [
     "tests",
