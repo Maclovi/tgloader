@@ -11,6 +11,7 @@ class CommonDTOProto(Protocol):
     status: Literal["ok", "bad"]
     error_info: str
     file_msg_id: int | None
+    has_in_thedb: bool
 
     @abstractmethod
     def to_json(self) -> str: ...

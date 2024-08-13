@@ -38,7 +38,7 @@ async def send_file_id_client(message: Message, ioc: "Container") -> None:
 
     await bot.send_message(
         user.id,
-        "final_common_file" + yt_dto.to_json(),
+        "client_proxy:final_common_file" + yt_dto.to_json(),
         disable_web_page_preview=True,
     )
 
@@ -86,3 +86,10 @@ async def send_errors(message: Message, ioc: "Container") -> None:
     await bot.send_message(
         tg_ids.group_error_id, message_for_group, disable_web_page_preview=True
     )
+
+
+@router.message(F.text.startswith("bot_proxy:"))
+async def bot_proxy(message: Message) -> None:
+    if message.text is None:
+        raise AttributeError("message.text should be string")
+    await message.answer(message.text.replace("bot_proxy:", "", 1))

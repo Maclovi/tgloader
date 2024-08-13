@@ -17,6 +17,7 @@ class BaseDTO(CommonDTOProto):
     status: Literal["ok", "bad"] = "ok"
     error_info: str = ""
     file_msg_id: int | None = None
+    has_in_thedb: bool = False
 
     def __post_init__(self) -> None:
         if not self.message_for_answer:
