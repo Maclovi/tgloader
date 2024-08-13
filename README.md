@@ -15,6 +15,7 @@
 
 - Python 3.11 or higher
 - PostgreSQL 16 or higher
+- Docker and docker compose
 - Telegram bot token (from [BotFather](https://t.me/botfather))
 - Telegram application with **api_id & api_hash** ([create client](https://my.telegram.org/))
 - Telegram group for errors
@@ -42,9 +43,13 @@ pip install -e .
 
 ## Usage
 
-Run the bot:
+Run the app in the docker container:
 ```bash
-docker compose up -d
+docker compose up
+```
+Or locally:
+```bash
+tgloader --run=all
 ```
 ### Authorization
 
