@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from aiogram.client.bot import Bot
 
 
-class InputAudioTube:
+class InputAudioTube:  # for telethon
     def __init__(
         self,
         audio: StreamProto,
@@ -19,7 +19,7 @@ class InputAudioTube:
     ) -> None:
         self.name = name
         self.chunk_size = chunk_size
-        self.audio = audio.get_chunks(chunk_size)
+        self.audio = audio.iter_chunks(chunk_size)
 
     async def read(self, _: int) -> bytes:
         for chunk in self.audio:
@@ -27,7 +27,7 @@ class InputAudioTube:
         return b""
 
 
-class YouTubeInputFile(InputFile):  # type: ignore
+class YouTubeInputFile(InputFile):  # for aiogram
     def __init__(
         self,
         yt: YouTubeProto,
@@ -35,7 +35,7 @@ class YouTubeInputFile(InputFile):  # type: ignore
         chunk_size: int = 9437184,  # 9mb.
     ) -> None:
         super().__init__(filename, chunk_size)
-        self.audio = yt.audio.get_chunks(chunk_size)
+        self.audio = yt.audio.iter_chunks(chunk_size)
 
     async def read(self, bot: "Bot") -> AsyncGenerator[bytes, None]:
         for chunk in self.audio:

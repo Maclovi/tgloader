@@ -1,4 +1,10 @@
 services:
+  client:
+    build: .
+    container_name: loader-client
+    env_file: .env
+    command: bash -c "alembic upgrade head && tgloader --run=client"
+    restart: always
   bot:
     build: .
     container_name: loader-bot
@@ -7,9 +13,3 @@ services:
     restart: always
     depends_on:
       - client
-  client:
-    build: .
-    container_name: loader-client
-    env_file: .env
-    command: tgloader --run=client
-    restart: always

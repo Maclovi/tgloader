@@ -6,7 +6,7 @@ class StreamProto(Protocol):
     @property
     def filesize(self) -> int: ...
 
-    def get_chunks(self, chunk_size: int | None = None) -> Iterator[bytes]:
+    def iter_chunks(self, chunk_size: int | None = None) -> Iterator[bytes]:
         yield b""
 
 

@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import cast
 
 import pytest
+import pytubefix
 from pytubefix import Stream, YouTube
 
 from loader.adapters.youtube import YouTubeAdapter
@@ -30,7 +31,9 @@ async def yta() -> YouTubeAdapter:
     return YouTubeAdapter("https://youtu.be/TCaNwAYqVI4?si=v4kdnDlg97csXjKN")
 
 
-@pytest.mark.skip()
+@pytest.mark.skipif(
+    pytubefix.__version__ == "6.10.2", reason="current version is tested"
+)
 @pytest.mark.download()
 class TestDownloadMp3:
     def test_download1(self, yt: "YouTube") -> None:
@@ -39,4 +42,4 @@ class TestDownloadMp3:
 
     def test_download2(self, yta: "YouTubeAdapter") -> None:
         with Path("temp/temp2.mp3").open("wb") as file:
-            file.writelines(yta.audio.get_chunks())
+            file.writelines(yta.audio.iter_chunks())
