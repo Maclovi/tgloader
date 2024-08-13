@@ -1,4 +1,5 @@
 from sqlalchemy import (
+    BigInteger,
     Column,
     DateTime,
     ForeignKey,
@@ -17,7 +18,7 @@ mapper_registry = registry()
 user = Table(
     "user",
     mapper_registry.metadata,
-    Column("id", Integer, primary_key=True),
+    Column("id", BigInteger, primary_key=True),
     Column("first_name", String(256)),
     Column("last_name", String(256)),
     Column("username", String(256)),

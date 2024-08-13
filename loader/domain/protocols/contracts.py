@@ -10,7 +10,7 @@ class CommonDTOProto(Protocol):
     file_id: str
     status: Literal["ok", "bad"]
     error_info: str
-    audio_id: int | None
+    file_msg_id: int | None
 
     @abstractmethod
     def to_json(self) -> str: ...
@@ -18,3 +18,7 @@ class CommonDTOProto(Protocol):
     @classmethod
     @abstractmethod
     def to_dict(cls, raw_json: str | bytes | bytearray) -> Self: ...
+
+
+class YouTubeSchemaProtocol(CommonDTOProto, Protocol):
+    video_id: str

@@ -20,7 +20,7 @@ class ComplectedDataForTelethon(NamedTuple):
     thumb: bytes
 
 
-async def get_bytes_photo(url: str) -> bytes:
+async def _get_bytes_photo(url: str) -> bytes:
     async with aiohttp.ClientSession() as session:
         resp = await session.get(url)
         thumb = await resp.read()
@@ -37,6 +37,6 @@ async def process_get_needed_data(link: str) -> ComplectedDataForTelethon:
         title=ytube.name,
         performer=ytube.author,
     )
-    thumb = await get_bytes_photo(ytube.thumb_url)
+    thumb = await _get_bytes_photo(ytube.thumb_url)
 
     return ComplectedDataForTelethon(ytube, audio, audioattr, thumb)

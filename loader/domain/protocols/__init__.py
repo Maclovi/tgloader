@@ -8,9 +8,10 @@ __all__ = [
     "YouTubeProto",
     "StreamProto",
     "YouTubeProto",
+    "YouTubeSchemaProtocol",
 ]
 
-from .contracts import CommonDTOProto
+from .contracts import CommonDTOProto, YouTubeSchemaProtocol
 from .database import (
     DatabaseGatewayProtocol,
     FileMapperProtocol,

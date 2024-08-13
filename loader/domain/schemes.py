@@ -2,7 +2,7 @@ import json
 from dataclasses import dataclass
 from typing import Literal, Self, TypeAlias
 
-from .protocols import CommonDTOProto
+from .protocols import CommonDTOProto, YouTubeSchemaProtocol
 
 JSONSerializedStr: TypeAlias = str
 
@@ -16,7 +16,7 @@ class BaseDTO(CommonDTOProto):
     file_id: str = ""
     status: Literal["ok", "bad"] = "ok"
     error_info: str = ""
-    audio_id: int | None = None
+    file_msg_id: int | None = None
 
     def __post_init__(self) -> None:
         if not self.message_for_answer:
@@ -32,5 +32,5 @@ class BaseDTO(CommonDTOProto):
 
 
 @dataclass(kw_only=True)
-class YouTubeDTO(BaseDTO):
-    pass
+class YouTubeDTO(BaseDTO, YouTubeSchemaProtocol):
+    video_id: str

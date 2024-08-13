@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from loader.adapters.database.gateway import DatabaseGateway
 from loader.adapters.database.models import mapper_registry
 from loader.application import FileDatabase, UserDatabase, UserFileDatabase
-from loader.domain.models import File, User, UserFile
+from loader.domain.models import File, User
 from loader.ioc import Container
 
 
@@ -94,13 +94,11 @@ class TestUser:
 class TestFile:
     @pytest.mark.asyncio()
     async def test_add_file(self, database: DatabaseGateway) -> None:
-        file = File("dasf", "dafsgd", 321)
-        await FileDatabase(database).create_file(file)
+        await FileDatabase(database).create_file("dasf", "dafsgd", 321)
 
     @pytest.mark.asyncio()
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
-        file = File("dasf", "dafsgd", 321)
-        await FileDatabase(database).create_file(file)
+        await FileDatabase(database).create_file("dasf", "dafsgd", 321)
 
     @pytest.mark.asyncio()
     async def test_file_by_video_id(self, database: DatabaseGateway) -> None:
@@ -113,10 +111,8 @@ class TestFile:
 class TestUserFile:
     @pytest.mark.asyncio()
     async def test_add_userfile(self, database: DatabaseGateway) -> None:
-        userfile = UserFile(1, "dasf")
-        await UserFileDatabase(database).create_userfile(userfile)
+        await UserFileDatabase(database).create_userfile(1, "dasf")
 
     @pytest.mark.asyncio()
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
-        userfile = UserFile(1, "dasf")
-        await UserFileDatabase(database).create_userfile(userfile)
+        await UserFileDatabase(database).create_userfile(1, "dasf")

@@ -23,5 +23,8 @@ class UserDatabase:
             await self.database.session.commit()
 
     async def update_status(self, id: int, new_status: Status) -> None:
-        await self.database.update_user_status(id, new_status)
-        await self.database.session.commit()
+        try:
+            await self.database.update_user_status(id, new_status)
+            await self.database.session.commit()
+        except IntegrityError:
+            await self.database.session.rollback()

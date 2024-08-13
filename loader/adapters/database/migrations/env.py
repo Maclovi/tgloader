@@ -3,12 +3,13 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
+from loader.adapters.database.models import mapper_registry
 from loader.config import load_config
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-db_uri = load_config("dev.ini").db.db_uri
+db_uri = load_config().db.db_uri
 config.set_main_option("sqlalchemy.url", db_uri)
 
 # Interpret the config file for Python logging.
@@ -20,8 +21,6 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from loader.adapters.database.models import mapper_registry  # noqa: E402
-
 target_metadata = mapper_registry.metadata
 
 # other values from the config, defined by the needs of env.py,

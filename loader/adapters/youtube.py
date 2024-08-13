@@ -1,15 +1,25 @@
-from dataclasses import dataclass
 from typing import cast
-from urllib.parse import urlparse
 
 from pytubefix import YouTube
 from pytubefix.streams import Stream
 
+from loader.domain.common import extract_video_id
 from loader.domain.protocols import YouTubeProto
 
 
-@dataclass(slots=True)
 class YouTubeAdapter(YouTubeProto):
+    __slots__ = (
+        "url",
+        "audio",
+        "name",
+        "thumb_url",
+        "author",
+        "file_size",
+        "video_id",
+        "duration",
+        "views",
+    )
+
     def __init__(
         self, url: str, auth: bool = True, cache_auth: bool = True
     ) -> None:
@@ -20,6 +30,6 @@ class YouTubeAdapter(YouTubeProto):
         self.thumb_url = yt.thumbnail_url
         self.author = yt.author
         self.file_size = self.audio.filesize
-        self.video_id = urlparse(url).query.split("=", 1)[-1]
+        self.video_id = extract_video_id(url)
         self.duration: int = yt.length
         self.views = yt.views

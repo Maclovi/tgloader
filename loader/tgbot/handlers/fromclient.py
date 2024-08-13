@@ -15,7 +15,7 @@ router = Router()
 router.message.filter(IsClient())
 
 
-@router.message(F.caption.startswith("youtube"))
+@router.message(F.caption.startswith("prepare_cache"))
 async def send_file_id_client(message: Message, ioc: "Container") -> None:
     logger.info("starting to do send_file_id_client")
 
@@ -24,19 +24,17 @@ async def send_file_id_client(message: Message, ioc: "Container") -> None:
     user = cast(User, message.from_user)
     audio = cast(Audio, message.audio)
     caption = cast(str, message.caption)
+    yt_dto = YouTubeDTO.to_dict(caption.replace("prepare_cache", "", 1))
+    yt_dto.file_id = audio.file_id
     bot_me = await bot.me()
-    bot_username = f"@{bot_me.username}"
-
-    yt_dto = YouTubeDTO.to_dict(caption.replace("youtube", "", 1))
 
     msg = await bot.send_audio(
         tg_ids.group_cache_id,
         audio.file_id,
-        caption=f"{yt_dto.message_for_answer}\n{bot_username}",
+        caption=f"{yt_dto.message_for_answer}\n@{bot_me.username}",
         parse_mode="HTML",
     )
-    yt_dto.file_id = audio.file_id
-    yt_dto.audio_id = msg.message_id
+    yt_dto.file_msg_id = msg.message_id
 
     await bot.send_message(
         user.id,
@@ -49,19 +47,22 @@ async def send_file_id_client(message: Message, ioc: "Container") -> None:
 async def send_file_customer(message: Message, ioc: "Container") -> None:
     logger.info("starting to do send_file_customer")
 
-    tg_ids = ioc.config.tg_ids
-    txt = cast(str, message.text)
+    json_raw = cast(str, message.text).replace("final_common_file", "", 1)
+    dto = YouTubeDTO.to_dict(json_raw)
     bot = cast(Bot, message.bot)
+    tg_ids = ioc.config.tg_ids
 
-    dto = BaseDTO.to_dict(txt.replace("final_common_file", "", 1))
-    if dto.audio_id is None:
+    if dto.file_msg_id is None:
         raise AttributeError("Audio_id is None, should be integer.")
 
     await bot.forward_message(
-        dto.customer_user_id, tg_ids.group_cache_id, dto.audio_id
+        dto.customer_user_id, tg_ids.group_cache_id, dto.file_msg_id
     )
+
     for message_id in dto.message_ids:
         await bot.delete_message(dto.customer_user_id, message_id)
+
+    await message.answer("save_youtube" + dto.to_json())
 
 
 @router.message(F.text.startswith("errors"))
