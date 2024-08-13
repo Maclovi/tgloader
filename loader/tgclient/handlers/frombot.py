@@ -31,7 +31,7 @@ async def handle_youtube_url(event: NewMessage.Event, ioc: "Container") -> None:
         if file:
             yt_dto.file_id = file.file_id
             yt_dto.file_msg_id = file.message_id
-            yt_dto.has_in_thedb = True
+            yt_dto.file_has_db = True
             await client.send_message(
                 bot_id, "final_common_file" + yt_dto.to_json()
             )
@@ -90,7 +90,7 @@ async def save_youtube(event: NewMessage.Event, ioc: "Container") -> None:
         raise AttributeError("Audio_id is None, should be integer.")
 
     async with ioc.new_session() as database:
-        if not yt_dto.has_in_thedb:
+        if not yt_dto.file_has_db:
             await FileDatabase(database).create_file(
                 videoid=yt_dto.video_id,
                 fileid=yt_dto.file_id,

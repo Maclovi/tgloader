@@ -11,7 +11,7 @@ class CommonDTOProto(Protocol):
     status: Literal["ok", "bad"]
     error_info: str
     file_msg_id: int | None
-    has_in_thedb: bool
+    file_has_db: bool
     video_id: str
 
     @abstractmethod

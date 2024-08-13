@@ -17,7 +17,7 @@ class BaseDTO(CommonDTOProto):
     status: Literal["ok", "bad"] = "ok"
     error_info: str = ""
     file_msg_id: int | None = None
-    has_in_thedb: bool = False
+    file_has_db: bool = False
     video_id: str = ""
 
     def __post_init__(self) -> None:
