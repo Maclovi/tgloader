@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING, cast
 from telethon import TelegramClient
 from telethon.events import NewMessage
 
+from loader.application.youtube import process_get_needed_data
 from loader.domain.schemes import YouTubeDTO
-from loader.domain.services.youtube import process_get_needed_data
 
 if TYPE_CHECKING:
     from loader.ioc import Container

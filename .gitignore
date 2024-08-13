@@ -6,6 +6,7 @@ loader.egg-info/
 # sensitive
 .env
 .env.sh
+.env.example
 .sens/
 me.session
 tests/unit/test_env.py

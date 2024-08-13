@@ -8,7 +8,7 @@ from aiogram.filters import CommandStart as CommandStart
 from aiogram.types import Message, User
 
 if TYPE_CHECKING:
-    from loader.di import Container
+    from loader.ioc import Container
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ IF_MEMBER = ChatMemberUpdatedFilter(member_status_changed=MEMBER)
 F_Return = TypeVar("F_Return")
 
 
-class BaseRegex(Filter):  # type: ignore
+class BaseRegex(Filter):
     def __init__(self, regex: str) -> None:
         self.pattern: re.Pattern[str] = re.compile(regex)
 
@@ -52,7 +52,7 @@ class RegexFullMatch(BaseRegex):
         return self._execute(message, re.fullmatch)
 
 
-class IsClient(Filter):  # type: ignore
+class IsClient(Filter):
     async def __call__(self, message: Message, ioc: "Container") -> bool:
         if not isinstance(message.from_user, User):
             return False

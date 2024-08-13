@@ -11,7 +11,7 @@ from loader.domain.models import File, User, UserFile
 from loader.ioc import Container
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 async def create_all_tables(async_engine: AsyncEngine) -> AsyncIterator[None]:
     async with async_engine.begin() as conn:
         await conn.run_sync(mapper_registry.metadata.create_all)
@@ -22,7 +22,7 @@ async def create_all_tables(async_engine: AsyncEngine) -> AsyncIterator[None]:
         await conn.run_sync(mapper_registry.metadata.drop_all)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def async_engine(ioc: Container) -> AsyncEngine:
     return ioc._engine
 

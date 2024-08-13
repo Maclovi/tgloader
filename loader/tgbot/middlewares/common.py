@@ -8,7 +8,7 @@ from aiogram.types import Message, TelegramObject
 logger = logging.getLogger(__name__)
 
 
-class LoggingMiddleware(BaseMiddleware):  # type: ignore
+class LoggingMiddleware(BaseMiddleware):
     async def __call__(
         self,
         handler: Callable[[Message, dict[str, Any]], Awaitable[Any]],
