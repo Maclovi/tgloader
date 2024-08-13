@@ -3,25 +3,27 @@ from asyncio import Semaphore
 from functools import partial
 from typing import TYPE_CHECKING, cast
 
-from telethon import TelegramClient
 from telethon.events import NewMessage
 
 from loader.application import FileDatabase, UserFileDatabase
 from loader.application.youtube import process_get_needed_data
-from loader.domain.common import timer
+from loader.domain.common import extract_video_id, timer
 from loader.domain.schemes import YouTubeDTO
 
 if TYPE_CHECKING:
+    from telethon import TelegramClient
+
     from loader.ioc import Container
 
 logger = logging.getLogger(__name__)
 
 
-async def send_file_bot(event: NewMessage.Event, ioc: "Container") -> None:
+async def handle_youtube_url(event: NewMessage.Event, ioc: "Container") -> None:
     logger.info("starting to do send_file_bot")
 
-    client = cast(TelegramClient, event.client)
+    client = cast("TelegramClient", event.client)
     yt_dto = YouTubeDTO.to_dict(event.raw_text.replace("youtube", "", 1))
+    yt_dto.video_id = extract_video_id(yt_dto.link)
     bot_id = ioc.config.tg_ids.bot_id
 
     async with ioc.new_session() as database:
@@ -43,7 +45,7 @@ async def send_file_bot(event: NewMessage.Event, ioc: "Container") -> None:
 async def download_youtube(event: NewMessage.Event, ioc: "Container") -> None:
     async with Semaphore(5):
         raw_json = event.raw_text.replace("download_youtube", "", 1)
-        client = cast(TelegramClient, event.client)
+        client = cast("TelegramClient", event.client)
         yt_dto = YouTubeDTO.to_dict(raw_json)
         bot_id = ioc.config.tg_ids.bot_id
 
@@ -75,7 +77,7 @@ async def client_proxy(event: NewMessage.Event, ioc: "Container") -> None:
     logger.info("starting to do proxy_for_success_files")
 
     bot_id = ioc.config.tg_ids.bot_id
-    client = cast(TelegramClient, event.client)
+    client = cast("TelegramClient", event.client)
     txt = event.raw_text.replace("client_proxy:", "", 1)
 
     await client.send_message(bot_id, txt)
@@ -99,9 +101,9 @@ async def save_youtube(event: NewMessage.Event, ioc: "Container") -> None:
         )
 
 
-def include_events_handlers(client: TelegramClient, ioc: "Container") -> None:
+def include_events_handlers(client: "TelegramClient", ioc: "Container") -> None:
     client.add_event_handler(
-        partial(send_file_bot, ioc=ioc),
+        partial(handle_youtube_url, ioc=ioc),
         NewMessage(
             chats=[ioc.config.tg_ids.bot_id],
             incoming=True,

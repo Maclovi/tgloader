@@ -5,7 +5,6 @@ from aiogram import Bot, F, Router
 from aiogram.types import ChatMemberUpdated, Message, User
 
 from loader.application import UserDatabase
-from loader.domain.common import extract_video_id
 from loader.domain.models import User as DBUser
 from loader.domain.schemes import YouTubeDTO
 
@@ -78,7 +77,6 @@ async def send_youtube_link(message: Message, ioc: "Container") -> None:
         customer_user_id=cast(int, user.id),
         link=link,
         message_ids=[message.message_id, bot_msg_id],
-        video_id=extract_video_id(link),
     )
 
     await bot.send_message(
