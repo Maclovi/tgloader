@@ -23,10 +23,10 @@ class Container:
     _engine: AsyncEngine
 
 
-def create_engine(db_uri: str) -> AsyncEngine:
+def create_engine(db_uri: str, echo: bool = True) -> AsyncEngine:
     engine = create_async_engine(
         db_uri,
-        echo=True,
+        echo=echo,
         pool_size=15,
         max_overflow=15,
         connect_args={
@@ -48,7 +48,7 @@ async def new_session(session_maker: async_sessionmaker) -> IterDatabaseGateway:
 
 def init_container() -> Container:
     conf = load_config()
-    engine = create_engine(conf.db.db_uri)
+    engine = create_engine(conf.db.db_uri, conf.db.debug)
     session_maker = maker_session(engine)
     session = partial(new_session, session_maker)
     return Container(

@@ -29,7 +29,7 @@ keywords = [
     "telegram",
 ]
 dependencies = [
-    "pytubefix @ https://github.com/Maclovi/pytubefix/archive/dev.zip",
+    "pytubefix",
     "aiogram>=3,<4",
     "telethon>=1,<2",
     "cryptg==0.4.0",

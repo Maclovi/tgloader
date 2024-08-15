@@ -10,6 +10,7 @@ class DbConfig:
     host: str
     port: str
     db_uri: str
+    debug: bool
 
 
 @dataclass(frozen=True, slots=True)
@@ -67,5 +68,6 @@ def load_config() -> Config:
             env["DB_HOST"],
             env["DB_PORT"],
             "postgresql+psycopg" + env["DB_URI"].replace("postgres", "", 1),
+            debug=env["DB_DEBUG"] == "true",
         ),
     )
