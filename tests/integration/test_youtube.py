@@ -6,6 +6,7 @@ import pytubefix
 from pytubefix import Stream, YouTube
 
 from loader.adapters.youtube import YouTubeAdapter
+from loader.domain.common import extract_video_id
 
 
 def setup_module(_: pytest.Module) -> None:
@@ -31,8 +32,20 @@ async def yta() -> YouTubeAdapter:
     return YouTubeAdapter("https://youtu.be/TCaNwAYqVI4?si=v4kdnDlg97csXjKN")
 
 
+@pytest.mark.videoid()
+def test_extract_video_id() -> None:
+    assert (
+        extract_video_id("https://www.youtube.com/watch?v=8B0fVk_ck2w&t=3s")
+        == "8B0fVk_ck2w"
+    )
+    assert (
+        extract_video_id("https://youtu.be/8B0fVk_ck2w?si=Ydhsadkjfhsdkj")
+        == "8B0fVk_ck2w"
+    )
+
+
 @pytest.mark.skipif(
-    pytubefix.__version__ == "6.10.2", reason="current version is tested"
+    pytubefix.__version__ == "6.11.0", reason="current version is tested"
 )
 @pytest.mark.download()
 class TestDownloadMp3:

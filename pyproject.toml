@@ -58,6 +58,7 @@ markers = [
     "db_file",
     "db_userfile",
     "download",
+    "videoid",
 ]
 testpaths = [
     "tests",
