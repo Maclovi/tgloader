@@ -90,9 +90,17 @@ async def send_youtube_link(message: Message, ioc: "Container") -> None:
 async def user_blocked(event: ChatMemberUpdated, ioc: "Container") -> None:
     logger.info("starting to do process_user_blocked_bot")
 
-    user_id = event.from_user.id
+    tg_user = event.from_user
+    domain_user = DBUser(
+        id=tg_user.id,
+        first_name=tg_user.first_name,
+        last_name=tg_user.last_name,
+        username=tg_user.username,
+        status="active",
+    )
+
     async with ioc.new_session() as database:
-        await UserDatabase(database).update_status(user_id, "inactive")
+        await UserDatabase(database).update_user(domain_user)
 
 
 @router.message()

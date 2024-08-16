@@ -76,7 +76,7 @@ class TestUser:
     @pytest.mark.asyncio()
     async def test_user_update(self, database: DatabaseGateway) -> None:
         user = User(1, "Sergey", "Yavorsky", "somenick", "inactive")
-        await UserDatabase(database).update_status(1, "inactive")
+        await UserDatabase(database).update_user(user)
         user_from_db = await database.get_user_by_id(1)
 
         assert user == user_from_db

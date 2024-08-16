@@ -1,18 +1,13 @@
-from typing import TypeAlias
-
 from sqlalchemy import Row, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from loader.adapters.database.models import file, user
-from loader.domain.common import Status
 from loader.domain.models import File, User, UserFile
 from loader.domain.protocols import (
     FileMapperProtocol,
     UserFileMapperProtocol,
     UserMapperProtocol,
 )
-
-AllowedDataclasses: TypeAlias = User | File | UserFile
 
 
 class Session:
@@ -33,8 +28,17 @@ class UserMapper(Session, UserMapperProtocol):
 
         return self._load_user(row) if row else None
 
-    async def update_user_status(self, id: int, new_status: Status) -> None:
-        stmt = update(user).where(user.c.id == id).values(status=new_status)
+    async def update_user(self, domain_user: "User", /) -> None:
+        stmt = (
+            update(user)
+            .where(user.c.id == domain_user.id)
+            .values(
+                first_name=domain_user.first_name,
+                last_name=domain_user.last_name,
+                username=domain_user.username,
+                status=domain_user.status,
+            )
+        )
         await self.session.execute(stmt)
 
 

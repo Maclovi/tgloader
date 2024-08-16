@@ -1,8 +1,6 @@
 from abc import abstractmethod
 from typing import TYPE_CHECKING, Protocol
 
-from loader.domain.common import Status
-
 if TYPE_CHECKING:
     from loader.domain.models import File, User, UserFile
 
@@ -12,10 +10,10 @@ class UserMapperProtocol(Protocol):
     async def add_user(self, user: "User") -> None: ...
 
     @abstractmethod
-    async def get_user_by_id(self, id: int) -> "User | None": ...
+    async def update_user(self, user: "User", /) -> None: ...
 
     @abstractmethod
-    async def update_user_status(self, id: int, new_status: Status) -> None: ...
+    async def get_user_by_id(self, id: int) -> "User | None": ...
 
 
 class FileMapperProtocol(Protocol):
