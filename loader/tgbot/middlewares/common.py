@@ -21,10 +21,11 @@ class ThrottlingMiddleware(BaseMiddleware):
         msg = cast(Message, event)
 
         ioc: "Container" = data["ioc"]  # noqa: UP037
+        client_id = ioc.config.tg_ids.client_id
         user = f"user{msg.chat.id}"
         userttl = await ioc.redis.ttl(user)
 
-        if userttl > 0:
+        if userttl > 0 and msg.chat.id != client_id:
             await msg.answer(f"Stop flooding, repeat after {userttl}")
             return
 
