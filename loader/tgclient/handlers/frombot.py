@@ -32,14 +32,11 @@ async def handle_youtube_url(event: NewMessage.Event, ioc: "Container") -> None:
             yt_dto.file_id = file.file_id
             yt_dto.file_msg_id = file.message_id
             yt_dto.file_has_db = True
-            await client.send_message(
-                bot_id, "final_common_file" + yt_dto.to_json()
-            )
-            return
+            queue = "final_common_file"
+        else:
+            queue = "bot_proxy:download_youtube"
 
-    await client.send_message(
-        bot_id, "bot_proxy:download_youtube" + yt_dto.to_json()
-    )
+    await client.send_message(bot_id, queue + yt_dto.to_json())
 
 
 async def download_youtube(event: NewMessage.Event, ioc: "Container") -> None:

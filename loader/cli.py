@@ -33,7 +33,10 @@ async def tgbot_main() -> None:
     dp.include_router(fromclient.router)
     dp.include_router(user.router)
 
-    await dp.start_polling(bot)
+    try:
+        await dp.start_polling(bot)
+    finally:
+        await container.aclose()
 
 
 async def tgclient_main() -> None:
@@ -54,6 +57,8 @@ async def tgclient_main() -> None:
             f"client is starting! name={me.first_name} username={me.username}"
         )
         await cast(Awaitable[None], client.run_until_disconnected())
+
+    await container.aclose()
 
 
 def run_tgclient_process() -> Process:

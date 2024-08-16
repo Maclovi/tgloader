@@ -59,7 +59,7 @@ async def send_file_customer(message: Message, ioc: "Container") -> None:
         dto.customer_user_id, tg_ids.group_cache_id, dto.file_msg_id
     )
 
-    for message_id in dto.message_ids:
+    for message_id in dto.messages_cleanup:
         await bot.delete_message(dto.customer_user_id, message_id)
 
     await message.answer("save_youtube" + dto.to_json())
@@ -74,7 +74,7 @@ async def send_errors(message: Message, ioc: "Container") -> None:
     txt = cast(str, message.text)
 
     dto = BaseDTO.to_dict(txt.replace("errors", "", 1))
-    bot_message_id = dto.message_ids[-1]
+    bot_message_id = dto.messages_cleanup[-1]
     message_for_user = "something went wrong, sorry, try later"
     message_for_group = f"error: {dto.error_info!r}\n\n{txt}"
 

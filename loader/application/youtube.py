@@ -30,6 +30,6 @@ async def get_music_data(link: str, ioc: "Container") -> YouTubeMusicData:
         title=ytube.name,
         performer=ytube.author,
     )
-    thumb = await (await ioc.http_session.get(ytube.thumb_url)).read()
+    thumb = await (await ioc.http_client.get(ytube.thumb_url)).read()
 
     return YouTubeMusicData(ytube, audio, audioattr, thumb)

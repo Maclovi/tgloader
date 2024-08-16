@@ -11,7 +11,7 @@ JSONSerializedStr: TypeAlias = str
 class BaseDTO(CommonDTOProto):
     link: str
     customer_user_id: int
-    message_ids: list[int]
+    messages_cleanup: list[int]
     message_for_answer: str = ""
     file_id: str = ""
     status: Literal["ok", "bad"] = "ok"

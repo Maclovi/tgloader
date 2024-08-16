@@ -21,8 +21,11 @@ IterDatabaseGateway = AsyncIterator[DatabaseGateway]
 class Container:
     config: Config
     new_session: partial[_AsyncGeneratorContextManager[DatabaseGateway]]
-    http_session: ClientSession
+    http_client: ClientSession
     _engine: AsyncEngine
+
+    async def aclose(self) -> None:
+        await self.http_client.close()
 
 
 def create_engine(db_uri: str, echo: bool = True) -> AsyncEngine:
@@ -53,11 +56,11 @@ def init_container() -> Container:
     engine = create_engine(conf.db.db_uri, conf.db.debug)
     session_maker = maker_session(engine)
     session = partial(new_session, session_maker)
-    http_session = ClientSession()
+    http_client = ClientSession()
 
     return Container(
         config=conf,
         new_session=session,
-        http_session=http_session,
+        http_client=http_client,
         _engine=engine,
     )

@@ -5,7 +5,7 @@ from typing import Literal, Protocol, Self
 class CommonDTOProto(Protocol):
     link: str
     customer_user_id: int
-    message_ids: list[int]
+    messages_cleanup: list[int]
     message_for_answer: str
     file_id: str
     status: Literal["ok", "bad"]

@@ -38,7 +38,7 @@ async def proccess_cmd_start(message: Message, ioc: "Container") -> None:
     async with ioc.new_session() as database:
         await UserDatabase(database).create_user(domain_user)
 
-    await message.answer("Hello")
+    await message.answer(f"Hello, {tg_user.first_name}!\nSend me youtube url")
 
 
 @router.message(RegexFullMatch("Помощь🚒"))
@@ -46,20 +46,6 @@ async def send_info(message: Message) -> None:
     logger.info("starting to do send_info")
 
     await message.answer("helping")
-
-
-@router.message(RegexFullMatch("Легально?⚠"))
-async def send_about_legal(message: Message) -> None:
-    logger.info("starting to do send_about_legal")
-
-    await message.answer("legal")
-
-
-@router.message(RegexFullMatch("Свой бот🤖"))
-async def send_info_own(message: Message) -> None:
-    logger.info("starting to do send_info_own")
-
-    await message.answer("own")
 
 
 @router.message(RegexSearch(r"youtu(\.be|be\.com)"))
@@ -76,7 +62,7 @@ async def send_youtube_link(message: Message, ioc: "Container") -> None:
     json_serialized = YouTubeDTO(
         customer_user_id=cast(int, user.id),
         link=link,
-        message_ids=[message.message_id, bot_msg_id],
+        messages_cleanup=[message.message_id, bot_msg_id],
     )
 
     await bot.send_message(
