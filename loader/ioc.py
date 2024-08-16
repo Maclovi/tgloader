@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from loader.adapters.database.gateway import DatabaseGateway
+from loader.adapters.stub_http import ClientSessionStub
 from loader.config import Config, load_config
 
 IterDatabaseGateway = AsyncIterator[DatabaseGateway]
@@ -52,12 +53,13 @@ async def new_session(session_maker: async_sessionmaker) -> IterDatabaseGateway:
         yield DatabaseGateway(session)
 
 
-def init_container() -> Container:
+def init_container(resolve_httpclient: bool = False) -> Container:
     conf = load_config()
     engine = create_engine(conf.db.db_uri, conf.db.debug)
     session_maker = maker_session(engine)
     session = partial(new_session, session_maker)
-    http_client = ClientSession()
+
+    http_client = ClientSessionStub() if resolve_httpclient else ClientSession()
 
     return Container(
         config=conf,

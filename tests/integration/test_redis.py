@@ -25,3 +25,17 @@ async def test_redis_get(ioc: Container) -> None:
 async def test_redis_delete(ioc: Container) -> None:
     await ioc.redis.delete("key")
     assert await ioc.redis.get("key") is None
+
+
+@pytest.mark.asyncio(scope="session")
+async def test_redis_set_key_id(ioc: Container) -> None:
+    user = f"user{31231}"
+    await ioc.redis.set(name=user, value="312", ex=15)
+
+
+@pytest.mark.asyncio(scope="session")
+async def test_redis_get_key_id(ioc: Container) -> None:
+    user = f"user{31231}"
+    user_id = await ioc.redis.get(user)
+    if user_id:
+        assert user_id.decode("utf8") == "312"

@@ -80,7 +80,7 @@ def auth_all(conf: Config) -> None:
 
 
 def main() -> None:
-    conf = init_container().config
+    conf = init_container(resolve_httpclient=True).config
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     auth_all(conf)
 

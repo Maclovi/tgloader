@@ -8,10 +8,12 @@ from subprocess import run as run_shell
 from typing import Final, cast
 
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.redis import RedisStorage
 from telethon.tl.types import User
 
 from loader.ioc import init_container
 from loader.tgbot.handlers import fromclient, user
+from loader.tgbot.middlewares.common import ThrottlingMiddleware
 from loader.tgclient.client import get_client
 from loader.tgclient.handlers import frombot
 
@@ -28,8 +30,12 @@ async def tgbot_main() -> None:
 
     logging.basicConfig(level=level, stream=sys.stdout, format=FORMAT)
 
+    storage = RedisStorage(container.redis)
+
     bot = Bot(token=container.config.tg_bot.token)
-    dp = Dispatcher(ioc=container)
+    dp = Dispatcher(storage=storage, ioc=container)
+
+    dp.message.middleware(ThrottlingMiddleware())
     dp.include_router(fromclient.router)
     dp.include_router(user.router)
 
