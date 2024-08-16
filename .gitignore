@@ -12,6 +12,7 @@ me.session
 tests/unit/test_env.py
 config_prod.sh
 config_dev.sh
+me.session-journal
 
 # cache
 *__pycache__

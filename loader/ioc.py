@@ -3,6 +3,7 @@ from contextlib import _AsyncGeneratorContextManager, asynccontextmanager
 from dataclasses import dataclass
 from functools import partial
 
+from aiohttp import ClientSession
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -16,10 +17,11 @@ from loader.config import Config, load_config
 IterDatabaseGateway = AsyncIterator[DatabaseGateway]
 
 
-@dataclass(slots=True)
+@dataclass(slots=True, kw_only=True)
 class Container:
     config: Config
     new_session: partial[_AsyncGeneratorContextManager[DatabaseGateway]]
+    http_session: ClientSession
     _engine: AsyncEngine
 
 
@@ -51,8 +53,11 @@ def init_container() -> Container:
     engine = create_engine(conf.db.db_uri, conf.db.debug)
     session_maker = maker_session(engine)
     session = partial(new_session, session_maker)
+    http_session = ClientSession()
+
     return Container(
         config=conf,
         new_session=session,
+        http_session=http_session,
         _engine=engine,
     )

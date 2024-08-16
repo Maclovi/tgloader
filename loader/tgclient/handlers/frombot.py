@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, cast
 from telethon.events import NewMessage
 
 from loader.application import FileDatabase, UserFileDatabase
-from loader.application.youtube import process_get_needed_data
+from loader.application.youtube import get_music_data
 from loader.domain.common import extract_video_id, timer
 from loader.domain.schemes import YouTubeDTO
 
@@ -51,7 +51,7 @@ async def download_youtube(event: NewMessage.Event, ioc: "Container") -> None:
 
         try:
             async with timer(logger):
-                datas = await process_get_needed_data(yt_dto.link)
+                datas = await get_music_data(yt_dto.link, ioc)
                 yt_dto.message_for_answer += f" | views: {datas.ytube.views:,}"
 
                 file = await client.upload_file(

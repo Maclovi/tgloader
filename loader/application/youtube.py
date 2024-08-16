@@ -1,7 +1,6 @@
 from logging import getLogger
 from typing import TYPE_CHECKING, BinaryIO, NamedTuple, cast
 
-import aiohttp
 from telethon.tl.types import DocumentAttributeAudio
 
 from loader.adapters.input_file import InputAudioTube
@@ -9,25 +8,19 @@ from loader.adapters.youtube import YouTubeAdapter
 
 if TYPE_CHECKING:
     from loader.domain.protocols.youtube import YouTubeProto
+    from loader.ioc import Container
 
 logger = getLogger(__name__)
 
 
-class ComplectedDataForTelethon(NamedTuple):
+class YouTubeMusicData(NamedTuple):
     ytube: "YouTubeProto"
     audio: BinaryIO
     audioattr: DocumentAttributeAudio
     thumb: bytes
 
 
-async def _get_bytes_photo(url: str) -> bytes:
-    async with aiohttp.ClientSession() as session:
-        resp = await session.get(url)
-        thumb = await resp.read()
-    return cast(bytes, thumb)
-
-
-async def process_get_needed_data(link: str) -> ComplectedDataForTelethon:
+async def get_music_data(link: str, ioc: "Container") -> YouTubeMusicData:
     ytube = YouTubeAdapter(link)
     audio = cast(
         BinaryIO, InputAudioTube(ytube.audio, name="n.mp3", chunk_size=524288)
@@ -37,6 +30,6 @@ async def process_get_needed_data(link: str) -> ComplectedDataForTelethon:
         title=ytube.name,
         performer=ytube.author,
     )
-    thumb = await _get_bytes_photo(ytube.thumb_url)
+    thumb = await (await ioc.http_session.get(ytube.thumb_url)).read()
 
-    return ComplectedDataForTelethon(ytube, audio, audioattr, thumb)
+    return YouTubeMusicData(ytube, audio, audioattr, thumb)
