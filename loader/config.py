@@ -14,6 +14,11 @@ class DbConfig:
 
 
 @dataclass(frozen=True, slots=True)
+class RedisConfig:
+    redis_uri: str
+
+
+@dataclass(frozen=True, slots=True)
 class TgBot:
     token: str
     use_redis: bool
@@ -41,6 +46,7 @@ class Config:
     tg_client: TgClient
     db: DbConfig
     tg_ids: TelegramIds
+    redis: RedisConfig
 
 
 def load_config() -> Config:
@@ -70,4 +76,5 @@ def load_config() -> Config:
             "postgresql+psycopg" + env["DB_URI"].replace("postgres", "", 1),
             debug=env["DB_DEBUG"] == "true",
         ),
+        redis=RedisConfig(redis_uri=env["REDIS_URI"]),
     )

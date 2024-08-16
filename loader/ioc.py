@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from functools import partial
 
 from aiohttp import ClientSession
+from redis.asyncio.client import Redis
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -22,10 +23,12 @@ class Container:
     config: Config
     new_session: partial[_AsyncGeneratorContextManager[DatabaseGateway]]
     http_client: ClientSession
+    redis: Redis  # type: ignore
     _engine: AsyncEngine
 
     async def aclose(self) -> None:
         await self.http_client.close()
+        await self.redis.aclose()  # type: ignore
 
 
 def create_engine(db_uri: str, echo: bool = True) -> AsyncEngine:
@@ -34,9 +37,7 @@ def create_engine(db_uri: str, echo: bool = True) -> AsyncEngine:
         echo=echo,
         pool_size=15,
         max_overflow=15,
-        connect_args={
-            "connect_timeout": 5,
-        },
+        connect_args={"connect_timeout": 5},
     )
     return engine
 
@@ -62,5 +63,6 @@ def init_container() -> Container:
         config=conf,
         new_session=session,
         http_client=http_client,
+        redis=Redis.from_url(conf.redis.redis_uri),
         _engine=engine,
     )

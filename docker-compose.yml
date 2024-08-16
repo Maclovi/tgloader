@@ -1,10 +1,23 @@
 services:
+  redis:
+    image: redis:7.2-alpine
+    container_name: redis
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli","ping" ]
+      interval: 5s
+      timeout: 20s
+      retries: 5
+    restart: unless-stopped
   client:
     build: .
     container_name: loader-client
     env_file: .env
     command: bash -c "alembic upgrade head && tgloader --run=client"
     restart: always
+    depends_on:
+      - redis
   bot:
     build: .
     container_name: loader-bot

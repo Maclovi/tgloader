@@ -48,7 +48,7 @@ async def send_info(message: Message) -> None:
     await message.answer("helping")
 
 
-@router.message(RegexSearch(r"youtu(\.be|be\.com)"))
+@router.message(RegexSearch(r"youtu(\.be|be\.com)"), flags={"media": "youtube"})
 async def send_youtube_link(message: Message, ioc: "Container") -> None:
     logger.info("starting to do send_youtube_link")
 

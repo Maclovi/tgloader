@@ -1,18 +1,12 @@
-from typing import TYPE_CHECKING
+from collections.abc import AsyncIterator
 
 import pytest
 
 from loader.ioc import Container, init_container
 
-if TYPE_CHECKING:
-    from loader.config import Config
-
 
 @pytest.fixture(scope="session")
-def ioc() -> Container:
-    return init_container()
-
-
-@pytest.fixture(scope="session")
-def config(ioc: Container) -> "Config":
-    return ioc.config
+async def ioc() -> AsyncIterator[Container]:
+    cont = init_container()
+    yield cont
+    await cont.aclose()
