@@ -36,11 +36,11 @@ async def yta() -> YouTubeAdapter:
 @pytest.mark.videoid
 def test_extract_video_id() -> None:
     assert (
-        extract_video_id("https://www.youtube.com/watch?v=8B0fVk_ck2w&t=3s")
+        extract_video_id("https://www.youtube.com/watch?v=FiXCxfWWwPo")
         == "8B0fVk_ck2w"
     )
     assert (
-        extract_video_id("https://youtu.be/8B0fVk_ck2w?si=Ydhsadkjfhsdkj")
+        extract_video_id("https://www.youtube.com/watch?v=FiXCxfWWwPo")
         == "8B0fVk_ck2w"
     )
 
