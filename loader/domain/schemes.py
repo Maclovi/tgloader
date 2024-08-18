@@ -1,4 +1,5 @@
 import json
+import re
 from dataclasses import dataclass
 from typing import Literal, Self, TypeAlias
 
@@ -7,7 +8,7 @@ from .protocols import CommonDTOProto
 JSONSerializedStr: TypeAlias = str
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, order=True)
 class BaseDTO(CommonDTOProto):
     link: str
     customer_user_id: int
@@ -28,9 +29,19 @@ class BaseDTO(CommonDTOProto):
         return json.dumps(self.__dict__)
 
     @classmethod
-    def to_dict(cls, raw_json: str | bytes | bytearray) -> Self:
-        data = json.loads(raw_json)
+    def to_class(cls, raw_json: str | bytes | bytearray) -> Self:
+        removed_prefix = cls._remove_prefix(raw_json)
+        data = json.loads(removed_prefix)
         return cls(**data)
+
+    @classmethod
+    def _remove_prefix(cls, raw_json: str | bytes | bytearray) -> str:
+        if isinstance(raw_json, bytes | bytearray):
+            raw_json = raw_json.decode("uft-8")
+        if not isinstance(raw_json, str):
+            raise TypeError(f"Type {type(raw_json)} of raw_json is not str")
+
+        return re.sub(r"^.+?(?=\[|\{)", "", raw_json, count=1)
 
 
 @dataclass(kw_only=True)

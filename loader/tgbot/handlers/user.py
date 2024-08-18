@@ -5,7 +5,8 @@ from aiogram import Bot, F, Router
 from aiogram.types import ChatMemberUpdated, Message, User
 
 from loader.application import UserDatabase
-from loader.domain.models import User as DBUser
+from loader.domain.enums import Queue
+from loader.domain.models import User as UserDomain
 from loader.domain.schemes import YouTubeDTO
 
 from ..filters.user import (
@@ -28,7 +29,7 @@ async def proccess_cmd_start(message: Message, ioc: "Container") -> None:
     logger.info("starting to do proccess_cmd_start")
 
     tg_user = cast(User, message.from_user)
-    domain_user = DBUser(
+    d_user = UserDomain(
         id=tg_user.id,
         first_name=tg_user.first_name,
         last_name=tg_user.last_name,
@@ -36,7 +37,7 @@ async def proccess_cmd_start(message: Message, ioc: "Container") -> None:
         status="active",
     )
     async with ioc.new_session() as database:
-        await UserDatabase(database).create_user(domain_user)
+        await UserDatabase(database).create_user(d_user)
 
     await message.answer(f"Hello, {tg_user.first_name}!\nSend me youtube url")
 
@@ -54,12 +55,11 @@ async def send_youtube_link(message: Message, ioc: "Container") -> None:
 
     tg_ids = ioc.config.tg_ids
     bot_msg_id = (await message.answer("I got it! downloading...")).message_id
-
     user = cast(User, message.from_user)
     bot = cast(Bot, message.bot)
     link = cast(str, message.text)
 
-    json_serialized = YouTubeDTO(
+    youtube_transfer_data = YouTubeDTO(
         customer_user_id=cast(int, user.id),
         link=link,
         messages_cleanup=[message.message_id, bot_msg_id],
@@ -67,7 +67,7 @@ async def send_youtube_link(message: Message, ioc: "Container") -> None:
 
     await bot.send_message(
         tg_ids.client_id,
-        f"youtube{json_serialized.to_json()}",
+        f"{Queue.PRE_YOUTUBE.value}{youtube_transfer_data.to_json()}",
         disable_web_page_preview=True,
     )
 
@@ -77,7 +77,7 @@ async def user_blocked(event: ChatMemberUpdated, ioc: "Container") -> None:
     logger.info("starting to do process_user_blocked_bot")
 
     tg_user = event.from_user
-    domain_user = DBUser(
+    domain_user = UserDomain(
         id=tg_user.id,
         first_name=tg_user.first_name,
         last_name=tg_user.last_name,

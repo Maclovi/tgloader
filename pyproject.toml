@@ -67,6 +67,7 @@ testpaths = [
 ]
 filterwarnings = [
     "ignore::DeprecationWarning:sqlalchemy.*",
+    "ignore::DeprecationWarning:.*?stub_http.*?"
 ]
 
 [tool.mypy]

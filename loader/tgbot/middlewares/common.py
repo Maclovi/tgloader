@@ -3,6 +3,7 @@ from collections.abc import Awaitable, Callable
 from typing import TYPE_CHECKING, Any, cast
 
 from aiogram import BaseMiddleware
+from aiogram.dispatcher.flags import get_flag
 from aiogram.types import Message, TelegramObject, User
 
 if TYPE_CHECKING:
@@ -19,19 +20,20 @@ class ThrottlingMiddleware(BaseMiddleware):
         data: dict[str, Any],
     ) -> Any:
         msg = cast(Message, event)
-        user_id = cast(User, msg.from_user).id
-
         ioc: "Container" = data["ioc"]  # noqa: UP037
-        client_id = ioc.config.tg_ids.client_id
-        user = f"user{msg.chat.id}"
-        userttl = await ioc.redis.ttl(user)
+        allowed_users = (ioc.config.tg_ids.client_id,)
+        request_user_id = cast(User, msg.from_user).id
 
-        if userttl > 0:
-            await msg.answer(f"Stop flooding, repeat after {userttl}")
+        if request_user_id in allowed_users or get_flag(data, "media") is None:
+            return await handler(msg, data)
+
+        redis_user_key = f"user{request_user_id}"
+
+        if (userttl := await ioc.redis.ttl(redis_user_key)) > 0:
+            answer = f"Request limit exceeded, please try again in {userttl}"
+            await msg.answer(answer)
             return
 
-        if user_id != client_id:
-            await ioc.redis.set(user, "0", ex=15)
-
-        logger.info(f"Do processing by {user}")
+        logger.info(f"Do processing by {redis_user_key!r}")
+        await ioc.redis.set(redis_user_key, "0", ex=15)
         return await handler(msg, data)
