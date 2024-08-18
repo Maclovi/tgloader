@@ -49,7 +49,7 @@ jobs:
       - uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
-      - run: echo "Value of MY_SECRET: $DEBUG"
+      - run: echo "$DEBUG"
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
