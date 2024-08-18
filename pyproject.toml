@@ -48,24 +48,19 @@ testing = [
 types = [
     "mypy==1.11.1",
     # mypy extensions
-    "types-Deprecated",
-    "types-PyYAML",
     "types-setuptools",
-    "types-ujson",
     "types-redis",
-    "types-Pygments",
-    "types-docutils",
 ]
 
 lint = [
     "loader[types]",
-    "ruff==0.5.7",
+    "ruff==0.6.1",
     "bandit==1.7.9",
     "semgrep==1.84.1",
     "codespell==2.3.0",
 ]
 
-dev = ["loader[types,testing]"]
+dev = ["loader[lint,testing]"]
 
 [project.urls]
 Homepage = "https://github.com/Maclovi/tgloader"

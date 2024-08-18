@@ -4,13 +4,13 @@ import logging
 import sys
 from collections.abc import Awaitable
 from multiprocessing import Process
-from subprocess import run as run_shell
 from typing import Final, cast
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage
 from telethon.tl.types import User
 
+from loader.auth import auth_all
 from loader.ioc import init_container
 from loader.tgbot.handlers import fromclient, user
 from loader.tgbot.middlewares.common import ThrottlingMiddleware
@@ -88,8 +88,7 @@ def cli() -> None:
     args = parser.parse_args()
 
     if args.run in ("all", "client"):
-        run_shell(["python", "loader/auth.py"], check=True)
-
+        auth_all()
     if args.run == "all":
         _ = run_tgclient_process()
         asyncio.run(tgbot_main())

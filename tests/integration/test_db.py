@@ -27,13 +27,13 @@ def async_engine(ioc: Container) -> AsyncEngine:
     return ioc._engine
 
 
-@pytest.fixture()
+@pytest.fixture
 async def database(ioc: Container) -> AsyncIterator[DatabaseGateway]:
     async with ioc.new_session() as session:
         yield session
 
 
-@pytest.mark.engine()
+@pytest.mark.engine
 class TestEngine:
     def test_engine_name(self, async_engine: AsyncEngine) -> None:
         assert async_engine.name == "postgresql"
@@ -41,39 +41,39 @@ class TestEngine:
     def test_engine_driver(self, async_engine: AsyncEngine) -> None:
         assert async_engine.driver == "psycopg"
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_version(self, async_engine: AsyncEngine) -> None:
         async with async_engine.connect() as conn:
             result = (await conn.execute(text("select version()"))).one()
             assert "PostgreSQL 16.3" in result[0][:20]
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_ping_db(self, async_engine: AsyncEngine) -> None:
         async with async_engine.connect() as conn:
             result = (await conn.execute(text("select 'hello world'"))).one()
             assert result[0] == "hello world"
 
 
-@pytest.mark.db_user()
+@pytest.mark.db_user
 class TestUser:
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_add_user(self, database: DatabaseGateway) -> None:
         user = User(1, "Sergey", "Yavorsky", "somenick", "active")
         await UserDatabase(database).create_user(user)
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
         user = User(1, "Sergey", "Yavorsky", "somenick", "active")
         await UserDatabase(database).create_user(user)
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_get_user(self, database: DatabaseGateway) -> None:
         user = User(1, "Sergey", "Yavorsky", "somenick", "active")
         user_from_db = await database.get_user_by_id(1)
 
         assert user == user_from_db
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_user_update(self, database: DatabaseGateway) -> None:
         user = User(1, "Sergey", "Yavorsky", "somenick", "inactive")
         await UserDatabase(database).update_user(user)
@@ -81,7 +81,7 @@ class TestUser:
 
         assert user == user_from_db
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_add_user_status(self, database: DatabaseGateway) -> None:
         user = User(1, "Sergey", "Yavorsky", "somenick", "active")
         await UserDatabase(database).create_user(user)
@@ -90,29 +90,29 @@ class TestUser:
         assert user == user_from_db
 
 
-@pytest.mark.db_file()
+@pytest.mark.db_file
 class TestFile:
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_add_file(self, database: DatabaseGateway) -> None:
         await FileDatabase(database).create_file("dasf", "dafsgd", 321)
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
         await FileDatabase(database).create_file("dasf", "dafsgd", 321)
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_file_by_video_id(self, database: DatabaseGateway) -> None:
         file = File("dasf", "dafsgd", 321)
         file_from_db = await FileDatabase(database).get_file_by_videoid("dasf")
         assert file == file_from_db
 
 
-@pytest.mark.db_userfile()
+@pytest.mark.db_userfile
 class TestUserFile:
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_add_userfile(self, database: DatabaseGateway) -> None:
         await UserFileDatabase(database).create_userfile(1, "dasf")
 
-    @pytest.mark.asyncio()
+    @pytest.mark.asyncio
     async def test_add_already_exists(self, database: DatabaseGateway) -> None:
         await UserFileDatabase(database).create_userfile(1, "dasf")

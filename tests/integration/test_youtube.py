@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import cast
 
 import pytest
-import pytubefix
 from pytubefix import Stream, YouTube
 
 from loader.adapters.youtube import YouTubeAdapter
@@ -22,17 +21,17 @@ def teardown_module(_: pytest.Module) -> None:
     temp_dir.rmdir()
 
 
-@pytest.fixture()
+@pytest.fixture
 async def yt() -> YouTube:
     return YouTube("https://youtu.be/TCaNwAYqVI4?si=v4kdnDlg97csXjKN")
 
 
-@pytest.fixture()
+@pytest.fixture
 async def yta() -> YouTubeAdapter:
     return YouTubeAdapter("https://youtu.be/TCaNwAYqVI4?si=v4kdnDlg97csXjKN")
 
 
-@pytest.mark.videoid()
+@pytest.mark.videoid
 def test_extract_video_id() -> None:
     assert (
         extract_video_id("https://www.youtube.com/watch?v=8B0fVk_ck2w&t=3s")
@@ -44,7 +43,7 @@ def test_extract_video_id() -> None:
     )
 
 
-@pytest.mark.download()
+@pytest.mark.download
 class TestDownloadMp3:
     def test_download1(self, yt: "YouTube") -> None:
         audio = cast(Stream, yt.streams.get_audio_only())

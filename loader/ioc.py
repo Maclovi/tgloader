@@ -55,7 +55,7 @@ async def new_session(
         yield DatabaseGateway(session)
 
 
-def init_container(resolve_httpclient: bool = False) -> Container:
+def init_container(*, resolve_httpclient: bool = False) -> Container:
     conf = load_config()
     engine = create_engine(conf.db.db_uri, conf.db.debug)
     session_maker = maker_session(engine)

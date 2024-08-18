@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytubefix
 
-from loader.config import Config
+from loader.config import TgClient
 from loader.ioc import init_container
 from loader.tgclient.client import get_client
 
@@ -13,8 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class AuthYouTube:
-    def __init__(self, config: Config) -> None:
-        self.config = config
+    def __init__(self) -> None:
         self.path_yt = Path(pytubefix.__file__).parent.resolve()
 
     def _auth(self) -> None:
@@ -45,11 +44,11 @@ class AuthYouTube:
 
 
 class AuthClient:
-    def __init__(self, config: Config) -> None:
-        self.config = config
+    def __init__(self, tg_client: TgClient) -> None:
+        self.tg_client = tg_client
 
     def _auth(self) -> None:
-        client = get_client(self.config.tg_client)
+        client = get_client(self.tg_client)
         with client:
             client.loop.run_until_complete(
                 client.send_message("me", "hello, myself!")
@@ -74,15 +73,15 @@ class AuthClient:
         logger.info("Client is authorized")
 
 
-def auth_all(conf: Config) -> None:
-    AuthYouTube(conf).auth()
-    AuthClient(conf).auth()
+def auth_all() -> None:
+    conf = init_container(resolve_httpclient=True).config
+    AuthYouTube().auth()
+    AuthClient(conf.tg_client).auth()
 
 
 def main() -> None:
-    conf = init_container(resolve_httpclient=True).config
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-    auth_all(conf)
+    auth_all()
 
 
 if __name__ == "__main__":

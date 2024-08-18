@@ -3,7 +3,7 @@ import pytest
 from loader.domain.schemes import BaseDTO
 
 
-@pytest.fixture()
+@pytest.fixture
 def dto() -> BaseDTO:
     return BaseDTO(
         link="dsada", customer_user_id=12345, messages_cleanup=[12345, 54321]
