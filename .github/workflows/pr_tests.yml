@@ -63,7 +63,10 @@ jobs:
           uv pip install --system .[testing]
       - run: mkdir coverage
       - name: Test
-        run: pytest
+        shell: bash
+        run: |
+          echo $DEBUG
+          pytest
         env:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.pydantic-version }}
