@@ -1,3 +1,5 @@
+from typing import Any
+
 from sqlalchemy import Row, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -16,7 +18,7 @@ class Session:
 
 
 class UserMapper(Session, UserMapperProtocol):
-    def _load_user(self, row: Row) -> User:
+    def _load_user(self, row: Row[Any]) -> User:
         return User(*row)
 
     async def add_user(self, user: User) -> None:
@@ -43,7 +45,7 @@ class UserMapper(Session, UserMapperProtocol):
 
 
 class FileMapper(Session, FileMapperProtocol):
-    def _load_file(self, row: Row) -> File:
+    def _load_file(self, row: Row[Any]) -> File:
         return File(*row)
 
     async def add_file(self, file: File) -> None:
@@ -57,7 +59,7 @@ class FileMapper(Session, FileMapperProtocol):
 
 
 class UserFileMapper(Session, UserFileMapperProtocol):
-    def _load_userfile(self, row: Row) -> UserFile:
+    def _load_userfile(self, row: Row[Any]) -> UserFile:
         return UserFile(*row)
 
     async def add_userfile(self, userfile: UserFile) -> None:

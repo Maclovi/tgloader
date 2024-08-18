@@ -60,7 +60,7 @@ async def send_youtube_link(message: Message, ioc: "Container") -> None:
     link = cast(str, message.text)
 
     youtube_transfer_data = YouTubeDTO(
-        customer_user_id=cast(int, user.id),
+        customer_user_id=user.id,
         link=link,
         messages_cleanup=[message.message_id, bot_msg_id],
     )
