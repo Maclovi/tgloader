@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import cast
 
 import pytest
+import pytubefix
 from pytubefix import Stream, YouTube
 
 from loader.adapters.youtube import YouTubeAdapter
@@ -45,6 +46,9 @@ def test_extract_video_id() -> None:
     )
 
 
+@pytest.mark.skipif(
+    pytubefix.__version__ == "6.11.0", reason="current version is tested"
+)
 @pytest.mark.download
 class TestDownloadMp3:
     def test_download1(self, yt: "YouTube") -> None:
