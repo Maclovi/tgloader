@@ -91,16 +91,28 @@ filterwarnings = [
 ]
 
 [tool.mypy]
+files = ["loader", "tests"]
+python_version = "3.11"
 strict = true
 pretty = true
+
+# non_interactive = true
+no_implicit_optional = true
+check_untyped_defs = true
 show_error_codes = true
 implicit_reexport = true
 namespace_packages = true
+ignore_missing_imports = true
+
 warn_unused_ignores = false
+warn_return_any = true
+
 allow_untyped_calls = true
 allow_subclassing_any = true
-ignore_missing_imports = true
 allow_untyped_decorators = true
+
+disallow_incomplete_defs = true
+disallow_any_unimported = false
 
 [tool.isort]
 profile = "black"
