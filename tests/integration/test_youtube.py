@@ -44,9 +44,6 @@ def test_extract_video_id() -> None:
     )
 
 
-@pytest.mark.skipif(
-    pytubefix.__version__ == "6.11.0", reason="current version is tested"
-)
 @pytest.mark.download()
 class TestDownloadMp3:
     def test_download1(self, yt: "YouTube") -> None:
