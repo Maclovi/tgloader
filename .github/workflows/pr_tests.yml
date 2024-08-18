@@ -58,6 +58,7 @@ jobs:
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
+          echo $DEBUG
           python -m pip install uv
           uv pip install --system .[testing]
       - run: mkdir coverage
@@ -68,7 +69,7 @@ jobs:
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.pydantic-version }}
           TOKEN: ${{ secrets.TOKEN }}
           DEBUG: ${{ secrets.DEBUG }}
-          API_ID: 14
+          API_ID: ${{ secrets.API_ID }}
           API_HASH: ${{ secrets.API_HASH }}
           BOT_ID: ${{ secrets.BOT_ID }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
