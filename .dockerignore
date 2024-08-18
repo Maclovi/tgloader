@@ -3,8 +3,6 @@ venv/
 tests/
 dev.ini
 example.config.ini
-LICENSE
-README.md
 build/
 loader.egg-info/
 
@@ -12,4 +10,6 @@ loader.egg-info/
 .mypy_cache
 .ruff_cache
 .pytest_cache
+.git
+.github
 **__pycache__
