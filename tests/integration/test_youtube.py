@@ -23,13 +23,13 @@ def teardown_module(_: pytest.Module) -> None:
 
 @pytest.fixture
 async def yt() -> YouTube:
-    return YouTube("https://youtu.be/TCaNwAYqVI4?si=v4kdnDlg97csXjKN")
+    return YouTube("https://www.youtube.com/watch?v=FiXCxfWWwPo")
 
 
 @pytest.fixture
 async def yta() -> YouTubeAdapter:
     return YouTubeAdapter(
-        "https://youtu.be/TCaNwAYqVI4?si=v4kdnDlg97csXjKN", auth=False
+        "https://www.youtube.com/watch?v=FiXCxfWWwPo", auth=False
     )
 
 
@@ -37,10 +37,10 @@ async def yta() -> YouTubeAdapter:
 def test_extract_video_id() -> None:
     assert (
         extract_video_id("https://www.youtube.com/watch?v=FiXCxfWWwPo")
-        == "8B0fVk_ck2w"
+        == "FiXCxfWWwPo"
     )
     assert (
-        extract_video_id("https://www.youtube.com/watch?v=FiXCxfWWwPo")
+        extract_video_id("https://youtu.be/8B0fVk_ck2w?si=Ydhsadkjfhsdkj")
         == "8B0fVk_ck2w"
     )
 
