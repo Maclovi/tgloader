@@ -46,6 +46,10 @@ jobs:
         python-version: ["3.11", "3.12"]   
     steps:
       - uses: actions/checkout@v4
+      - uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+      - run: echo "Value of MY_SECRET: $DEBUG"
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -63,29 +67,10 @@ jobs:
           uv pip install --system .[testing]
       - run: mkdir coverage
       - name: Test
-        shell: bash
-        run: |
-          echo $DEBUG
-          pytest
+        run: pytest
         env:
           COVERAGE_FILE: coverage/.coverage.${{ runner.os }}-py${{ matrix.python-version }}
           CONTEXT: ${{ runner.os }}-py${{ matrix.python-version }}-${{ matrix.pydantic-version }}
-          TOKEN: ${{ secrets.TOKEN }}
-          DEBUG: ${{ secrets.DEBUG }}
-          API_ID: ${{ secrets.API_ID }}
-          API_HASH: ${{ secrets.API_HASH }}
-          BOT_ID: ${{ secrets.BOT_ID }}
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          GROUP_ERROR_ID: ${{ secrets.GROUP_ERROR_ID }}
-          GROUP_CACHE_ID: ${{ secrets.GROUP_CACHE_ID }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_URI: ${{ secrets.DB_URI }}
-          DB_DEBUG: ${{ secrets.DB_DEBUG }}
-          REDIS_URI: ${{ secrets.REDIS_URI }}     
       - name: Store coverage files
         uses: actions/upload-artifact@v4
         with:
