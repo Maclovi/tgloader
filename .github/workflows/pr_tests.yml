@@ -51,7 +51,7 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
       - name: show env
-        run: echo "${REDIS_URI}"
+        run: echo $SHELL
         shell: bash
       - name: Set up Python
         uses: actions/setup-python@v5
