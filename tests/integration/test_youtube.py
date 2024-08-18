@@ -28,7 +28,9 @@ async def yt() -> YouTube:
 
 @pytest.fixture
 async def yta() -> YouTubeAdapter:
-    return YouTubeAdapter("https://youtu.be/TCaNwAYqVI4?si=v4kdnDlg97csXjKN")
+    return YouTubeAdapter(
+        "https://youtu.be/TCaNwAYqVI4?si=v4kdnDlg97csXjKN", auth=False
+    )
 
 
 @pytest.mark.videoid
