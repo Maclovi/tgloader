@@ -29,11 +29,11 @@ jobs:
 
       - name: Run mypy
         shell: bash
-        run: mypy
+        run: mypy .
 
       - name: Run bandit
         shell: bash
-        run: bandit -c pyproject.toml -r tgloader
+        run: bandit -c pyproject.toml -r loader
 
       - name: Run Semgrep
         shell: bash
