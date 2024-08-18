@@ -58,7 +58,7 @@ types = [
 ]
 
 lint = [
-    "tgloader[types]",
+    "loader[types]",
     "ruff==0.5.7",
     "bandit==1.7.9",
     "semgrep==1.84.1",
