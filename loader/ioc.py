@@ -48,7 +48,9 @@ def maker_session(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
 
 
 @asynccontextmanager
-async def new_session(session_maker: async_sessionmaker) -> IterDatabaseGateway:
+async def new_session(
+    session_maker: async_sessionmaker[AsyncSession],
+) -> IterDatabaseGateway:
     async with session_maker() as session:
         yield DatabaseGateway(session)
 
