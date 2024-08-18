@@ -92,11 +92,11 @@ filterwarnings = [
 
 [tool.mypy]
 files = ["loader", "tests"]
+exclude = [".venv", ".cache", "build"]
 python_version = "3.11"
 strict = true
 pretty = true
 
-# non_interactive = true
 no_implicit_optional = true
 check_untyped_defs = true
 show_error_codes = true
