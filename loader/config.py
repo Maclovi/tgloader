@@ -21,7 +21,6 @@ class RedisConfig:
 @dataclass(frozen=True, slots=True)
 class TgBot:
     token: str
-    use_redis: bool
     debug: bool
 
 
@@ -53,7 +52,6 @@ def load_config() -> Config:
     return Config(
         tg_bot=TgBot(
             token=env["TOKEN"],
-            use_redis=env["USE_REDIS"] == "true",
             debug=env["DEBUG"] == "true",
         ),
         tg_client=TgClient(
