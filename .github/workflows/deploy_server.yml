@@ -1,6 +1,8 @@
 name: Deploy to Server
 
 on:
+  push:
+    branches: ["main"]
   workflow_dispatch:
   
 jobs:
@@ -23,7 +25,6 @@ jobs:
           "cd tgloader \
           && git pull \
           && docker-compose up -d --build --no-deps \
-          && docker system prune -a \
           && exit"
       - name: cleanup
         run: rm -rf ~/.ssh
