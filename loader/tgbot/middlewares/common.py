@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from collections.abc import Awaitable, Callable
 from typing import TYPE_CHECKING, Any, cast
@@ -31,7 +32,11 @@ class ThrottlingMiddleware(BaseMiddleware):
 
         if (userttl := await ioc.redis.ttl(redis_user_key)) > 0:
             answer = f"Request limit exceeded, please try again in {userttl}"
-            await msg.answer(answer)
+            bot_ans = await msg.answer(answer)
+
+            await asyncio.sleep(15)
+            await msg.delete()
+            await bot_ans.delete()
             return
 
         logger.info(f"Do processing by {redis_user_key!r}")

@@ -64,7 +64,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Dependency
+      - name: Install Dependencies and library
         run: |
           python -m pip install uv
           uv pip install --system .[testing]
