@@ -11,15 +11,14 @@ jobs:
       SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       PORT: ${{ secrets.PORT }}
       HOST: ${{ secrets.HOST }}
+      USER: ${{ secrets.SSH_USER }}
     steps:
       - name: install ssh key
         run: |
-          echo $PORT
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo $SSH_KEY > ~/.ssh/id_rsa
           ssh-keyscan -p $PORT -H $HOST > ~/.ssh/known_hosts
-          echo $PORT
       - name: check health
-        run: ssh $HOST -p $PORT "echo $SHELL && echo OK $$ exit"
+        run: ssh "${USER}@${HOST}" -p $PORT "echo $SHELL && echo OK $$ exit"
       - name: cleanup
         run: rm -rf ~/.ssh
