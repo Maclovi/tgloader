@@ -24,6 +24,6 @@ jobs:
           && git pull \
           && docker-compose up -d --build --no-deps \
           && docker system prune -a \
-          $$ exit"
+          && exit"
       - name: cleanup
         run: rm -rf ~/.ssh
