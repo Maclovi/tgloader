@@ -17,7 +17,13 @@ jobs:
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -p $PORT -H $HOST > ~/.ssh/known_hosts
-      - name: check health
-        run: ssh $USER@$HOST -p $PORT "echo $SHELL && echo OK $$ exit"
+      - name: connect ssh & pull & docker rebuilding
+        run: |
+          ssh $USER@$HOST -p $PORT \
+          "cd tgloader \
+          && git pull \
+          && docker-compose up -d --build --no-deps \
+          && docker system prune -a \
+          $$ exit"
       - name: cleanup
         run: rm -rf ~/.ssh
