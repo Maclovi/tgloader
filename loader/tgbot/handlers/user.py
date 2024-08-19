@@ -39,7 +39,9 @@ async def proccess_cmd_start(message: Message, ioc: "Container") -> None:
     async with ioc.new_session() as database:
         await UserDatabase(database).create_user(d_user)
 
-    await message.answer(f"Hello, {tg_user.first_name}!\nSend me youtube url")
+    await message.answer(
+        f"Hello my friend, {tg_user.first_name}!\nSend me youtube url"
+    )
 
 
 @router.message(RegexFullMatch("Помощь🚒"))
