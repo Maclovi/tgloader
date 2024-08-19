@@ -3,8 +3,7 @@ name: Run all tests
 on:
   schedule:
     - cron: "0 0 * * *"
-  #push:
-    #branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   static_analysis:
@@ -65,8 +64,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Test
+      - name: Install Dependency
         run: |
           python -m pip install uv
           uv pip install --system .[testing]
-          pytest
+      - name: Run Test
+        run: pytest
