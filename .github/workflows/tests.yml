@@ -71,6 +71,7 @@ jobs:
           python -m pip install uv
           uv pip install --system .[testing]
 
+      - run: mkdir .sens/
       - name: Create json
         id: create-json
         uses: jsdaniell/create-json@v1.2.3
