@@ -1,4 +1,4 @@
-name: Run all tests
+name: Run schedule tests
 
 on:
   schedule:

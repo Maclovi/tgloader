@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from typing import TYPE_CHECKING, cast
 
@@ -95,4 +96,8 @@ async def user_blocked(event: ChatMemberUpdated, ioc: "Container") -> None:
 async def send_echo(message: Message) -> None:
     logger.info("starting to do send_echo")
 
-    await message.answer("Мне не удалось вас понять :(")
+    bot_ans = await message.answer("Мне не удалось вас понять :(")
+
+    await asyncio.sleep(15)
+    await message.delete()
+    await bot_ans.delete()

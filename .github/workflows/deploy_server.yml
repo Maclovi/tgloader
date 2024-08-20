@@ -25,6 +25,7 @@ jobs:
           "cd tgloader \
           && git pull \
           && docker-compose up -d --build --no-deps \
+          && docker system prune -fa \
           && exit"
       - name: cleanup
         run: rm -rf ~/.ssh
