@@ -71,10 +71,13 @@ jobs:
           python -m pip install uv
           uv pip install --system .[testing]
 
-      - name: Youtube auth
-        run: |
-          mkdir .sens
-          echo "${{ secrets.YOUTUBE_TOKEN }}" > .sens/tokens.json
+      - name: Create json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.3
+        with:
+          name: "tokens.json"
+          json: ${{ secrets.YOUTUBE_TOKEN }}
+          dir: '.sens/'
 
       - name: Run Test
         run: pytest
