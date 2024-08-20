@@ -25,14 +25,14 @@ def teardown_module(_: pytest.Module) -> None:
 
 @pytest.fixture
 async def yt() -> YouTube:
-    return YouTube("https://www.youtube.com/watch?v=FiXCxfWWwPo")
+    return YouTube(
+        "https://www.youtube.com/watch?v=FiXCxfWWwPo", use_oauth=True
+    )
 
 
 @pytest.fixture
 async def yta() -> YouTubeAdapter:
-    return YouTubeAdapter(
-        "https://www.youtube.com/watch?v=FiXCxfWWwPo", auth=False
-    )
+    return YouTubeAdapter("https://www.youtube.com/watch?v=FiXCxfWWwPo")
 
 
 @pytest.mark.videoid
