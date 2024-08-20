@@ -25,7 +25,7 @@ class AuthYouTube:
 
     def _auth_handler(self) -> None:
         tokens = Path(".sens/tokens.json").resolve()
-        if tokens.exists() and self.path_yt:
+        if tokens.exists():
             logger.info("coping tokens.json to pytube dir base")
             (self.path_yt / "__cache__").mkdir()
             shutil.copy(tokens, self.path_yt / "__cache__/tokens.json")

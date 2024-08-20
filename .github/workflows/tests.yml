@@ -60,13 +60,21 @@ jobs:
         python-version: ["3.11"]
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install Dependencies and library
         run: |
           python -m pip install uv
           uv pip install --system .[testing]
+
+      - name: Youtube auth
+        run: |
+          mkdir .sens
+          echo ${{ secrets.YOUTUBE_TOKEN }} > .sens/tokens.json
+
       - name: Run Test
         run: pytest

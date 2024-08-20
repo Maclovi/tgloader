@@ -2,14 +2,15 @@ from pathlib import Path
 from typing import cast
 
 import pytest
-import pytubefix
 from pytubefix import Stream, YouTube
 
 from loader.adapters.youtube import YouTubeAdapter
+from loader.auth import AuthYouTube
 from loader.domain.common import extract_video_id
 
 
 def setup_module(_: pytest.Module) -> None:
+    AuthYouTube().auth()
     Path.mkdir(Path("temp"), exist_ok=True)
 
 
@@ -46,7 +47,6 @@ def test_extract_video_id() -> None:
     )
 
 
-@pytest.mark.skip
 @pytest.mark.download
 class TestDownloadMp3:
     def test_download1(self, yt: "YouTube") -> None:
