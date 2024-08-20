@@ -74,7 +74,7 @@ jobs:
       - name: Youtube auth
         run: |
           mkdir .sens
-          echo ${{ secrets.YOUTUBE_TOKEN }} > .sens/tokens.json
+          echo "${{ secrets.YOUTUBE_TOKEN }}" > .sens/tokens.json
 
       - name: Run Test
         run: pytest
