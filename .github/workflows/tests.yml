@@ -71,7 +71,9 @@ jobs:
           python -m pip install uv
           uv pip install --system .[testing]
 
-      - run: mkdir .sens/
+      - name: Create dir
+        run: mkdir .sens/
+
       - name: Create json
         id: create-json
         uses: jsdaniell/create-json@v1.2.3
@@ -80,5 +82,8 @@ jobs:
           json: ${{ secrets.YOUTUBE_TOKEN }}
           dir: '.sens/'
 
-      - name: Run Test
+      - name: Run pytest
         run: pytest
+
+      - name: cleanup
+        run: rm -rf .sens
