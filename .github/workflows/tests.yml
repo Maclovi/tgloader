@@ -38,23 +38,6 @@ jobs:
         
   test-basic:
     runs-on: ubuntu-latest
-    env:
-      TOKEN: ${{ secrets.TOKEN }}
-      DEBUG: ${{ secrets.DEBUG }}
-      API_ID: ${{ secrets.API_ID }}
-      API_HASH: ${{ secrets.API_HASH }}
-      BOT_ID: ${{ secrets.BOT_ID }}
-      CLIENT_ID: ${{ secrets.CLIENT_ID }}
-      GROUP_ERROR_ID: ${{ secrets.GROUP_ERROR_ID }}
-      GROUP_CACHE_ID: ${{ secrets.GROUP_CACHE_ID }}
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      DB_DATABASE: ${{ secrets.DB_DATABASE }}
-      DB_HOST: ${{ secrets.DB_HOST }}
-      DB_PORT: ${{ secrets.DB_PORT }}
-      DB_URI: ${{ secrets.DB_URI }}
-      DB_DEBUG: ${{ secrets.DB_DEBUG }}
-      REDIS_URI: ${{ secrets.REDIS_URI }}
     strategy:
       matrix:
         python-version: ["3.11"]
@@ -83,6 +66,23 @@ jobs:
           dir: '.sens/'
 
       - name: Run pytest
+        env:
+          TOKEN: ${{ secrets.TOKEN }}
+          DEBUG: ${{ secrets.DEBUG }}
+          API_ID: ${{ secrets.API_ID }}
+          API_HASH: ${{ secrets.API_HASH }}
+          BOT_ID: ${{ secrets.BOT_ID }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          GROUP_ERROR_ID: ${{ secrets.GROUP_ERROR_ID }}
+          GROUP_CACHE_ID: ${{ secrets.GROUP_CACHE_ID }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_URI: ${{ secrets.DB_URI }}
+          DB_DEBUG: ${{ secrets.DB_DEBUG }}
+          REDIS_URI: ${{ secrets.REDIS_URI }}
         run: pytest
 
       - name: cleanup

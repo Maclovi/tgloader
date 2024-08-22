@@ -47,7 +47,7 @@ def test_extract_video_id() -> None:
     )
 
 
-@pytest.mark.download
+@pytest.mark.youtube
 class TestDownloadMp3:
     def test_download1(self, yt: "YouTube") -> None:
         audio = cast(Stream, yt.streams.get_audio_only())
