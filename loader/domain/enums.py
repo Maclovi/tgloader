@@ -8,3 +8,6 @@ class Queue(enum.StrEnum):
     FINAL_COMMON_MEDIA = "final_common_media"
     ERRORS = "errors"
     SAVE_YOUTUBE = "save_youtube"
+
+    def __str__(self) -> str:
+        return self.value

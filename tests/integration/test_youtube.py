@@ -1,3 +1,4 @@
+from collections.abc import Iterator
 from pathlib import Path
 from typing import cast
 
@@ -9,18 +10,18 @@ from loader.auth import AuthYouTube
 from loader.domain.common import extract_video_id
 
 
-def setup_module(_: pytest.Module) -> None:
+@pytest.fixture(scope="module")
+def lifespan() -> Iterator[None]:
     AuthYouTube().auth()
-    Path.mkdir(Path("temp"), exist_ok=True)
 
+    dir = Path("temp")
+    Path.mkdir(dir, exist_ok=True)
 
-def teardown_module(_: pytest.Module) -> None:
-    temp_dir = Path("temp")
+    yield None
 
-    for file in temp_dir.iterdir():
+    for file in dir.iterdir():
         file.unlink()
-
-    temp_dir.rmdir()
+    dir.rmdir()
 
 
 @pytest.fixture

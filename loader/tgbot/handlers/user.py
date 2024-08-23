@@ -70,7 +70,7 @@ async def send_youtube_link(message: Message, ioc: "Container") -> None:
 
     await bot.send_message(
         tg_ids.client_id,
-        f"{Queue.PRE_YOUTUBE.value}{youtube_transfer_data.to_json()}",
+        f"{Queue.PRE_YOUTUBE}{youtube_transfer_data.to_json()}",
         disable_web_page_preview=True,
     )
 

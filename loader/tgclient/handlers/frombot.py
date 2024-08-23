@@ -33,9 +33,9 @@ async def handle_youtube_url(event: NewMessage.Event, ioc: "Container") -> None:
             yt_dto.file_id = file.file_id
             yt_dto.file_msg_id = file.message_id
             yt_dto.file_has_db = True
-            queue = Queue.FINAL_COMMON_MEDIA.value
+            queue = str(Queue.FINAL_COMMON_MEDIA)
         else:
-            queue = f"bot_proxy:{Queue.DOWNLOAD_YOUTUBE.value}"
+            queue = f"bot_proxy:{Queue.DOWNLOAD_YOUTUBE}"
 
     await client.send_message(bot_id, queue + yt_dto.to_json())
 
@@ -60,7 +60,7 @@ async def download_youtube(event: NewMessage.Event, ioc: "Container") -> None:
                     bot_id,
                     file,
                     attributes=[music.audioattr],
-                    caption=f"{Queue.YOUTUBE_CACHE.value}{yt_dto.to_json()}",
+                    caption=f"{Queue.YOUTUBE_CACHE}{yt_dto.to_json()}",
                     thumb=music.thumb,
                     allow_cache=False,
                 )
@@ -68,7 +68,7 @@ async def download_youtube(event: NewMessage.Event, ioc: "Container") -> None:
             logger.error(e, stack_info=True)
             yt_dto.error_info = str(e)
             await client.send_message(
-                bot_id, f"{Queue.ERRORS.value}{yt_dto.to_json()}"
+                bot_id, f"{Queue.ERRORS}{yt_dto.to_json()}"
             )
 
 
@@ -106,7 +106,7 @@ def include_events_handlers(client: "TelegramClient", ioc: "Container") -> None:
         NewMessage(
             chats=[ioc.config.tg_ids.bot_id],
             incoming=True,
-            pattern=rf"^{Queue.PRE_YOUTUBE.value}.",
+            pattern=rf"^{Queue.PRE_YOUTUBE}.",
         ),
     )
     client.add_event_handler(
@@ -122,7 +122,7 @@ def include_events_handlers(client: "TelegramClient", ioc: "Container") -> None:
         NewMessage(
             chats=[ioc.config.tg_ids.bot_id],
             incoming=True,
-            pattern=rf"^{Queue.SAVE_YOUTUBE.value}.",
+            pattern=rf"^{Queue.SAVE_YOUTUBE}.",
         ),
     )
     client.add_event_handler(
@@ -130,6 +130,6 @@ def include_events_handlers(client: "TelegramClient", ioc: "Container") -> None:
         NewMessage(
             chats=[ioc.config.tg_ids.bot_id],
             incoming=True,
-            pattern=rf"^{Queue.DOWNLOAD_YOUTUBE.value}.",
+            pattern=rf"^{Queue.DOWNLOAD_YOUTUBE}.",
         ),
     )

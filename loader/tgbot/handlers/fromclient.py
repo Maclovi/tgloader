@@ -16,7 +16,7 @@ router = Router()
 router.message.filter(IsClient())
 
 
-@router.message(F.caption.startswith(Queue.YOUTUBE_CACHE.value))
+@router.message(F.caption.startswith(Queue.YOUTUBE_CACHE))
 async def pre_cache_youtube(message: Message, ioc: "Container") -> None:
     logger.info(f"starting to do {pre_cache_youtube.__name__}")
 
@@ -38,12 +38,12 @@ async def pre_cache_youtube(message: Message, ioc: "Container") -> None:
 
     await bot.send_message(
         user.id,
-        f"client_proxy:{Queue.FINAL_COMMON_MEDIA.value}{yt_dto.to_json()}",
+        f"client_proxy:{Queue.FINAL_COMMON_MEDIA}{yt_dto.to_json()}",
         disable_web_page_preview=True,
     )
 
 
-@router.message(F.text.startswith(Queue.FINAL_COMMON_MEDIA.value))
+@router.message(F.text.startswith(Queue.FINAL_COMMON_MEDIA))
 async def send_file_customer(message: Message, ioc: "Container") -> None:
     logger.info("starting to do send_file_customer")
 
@@ -61,10 +61,10 @@ async def send_file_customer(message: Message, ioc: "Container") -> None:
     for message_id in dto.messages_cleanup:
         await bot.delete_message(dto.customer_user_id, message_id)
 
-    await message.answer(f"{Queue.SAVE_YOUTUBE.value}{dto.to_json()}")
+    await message.answer(f"{Queue.SAVE_YOUTUBE}{dto.to_json()}")
 
 
-@router.message(F.text.startswith(Queue.ERRORS.value))
+@router.message(F.text.startswith(Queue.ERRORS))
 async def send_errors(message: Message, ioc: "Container") -> None:
     logger.info("starting to do send_errors")
 
