@@ -18,7 +18,7 @@ from loader.tgclient.client import get_client
 from loader.tgclient.handlers import frombot
 
 logger = logging.getLogger(__name__)
-FORMAT: Final = "[%(asctime)s] [%(name)s]" "[%(levelname)s] > %(message)s"
+FORMAT: Final = "[%(asctime)s] [%(name)s] [%(levelname)s] > %(message)s"
 
 
 async def tgbot_main() -> None:

@@ -39,7 +39,7 @@ pip install -e .
 ### How to start
 1. Edit code in a corresponding way
 2. Rename example.config.ini to config.ini
-3. Fill out the confg.ini
+3. Fill out the config.ini
 
 ## Usage
 

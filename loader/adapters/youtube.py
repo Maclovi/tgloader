@@ -23,7 +23,12 @@ class YouTubeAdapter(YouTubeProto):
     def __init__(
         self, url: str, auth: bool = True, cache_auth: bool = True
     ) -> None:
-        yt = YouTube(url, use_oauth=auth, allow_oauth_cache=cache_auth)
+        yt = YouTube(
+            url,
+            use_oauth=auth,
+            allow_oauth_cache=cache_auth,
+            token_file=".sens/tokens.json",
+        )
         self.url = url
         self.audio = cast(Stream, yt.streams.get_audio_only())
         self.name = yt.title
