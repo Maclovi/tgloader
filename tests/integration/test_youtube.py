@@ -10,7 +10,7 @@ from loader.auth import AuthYouTube
 from loader.domain.common import extract_video_id
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="module", autouse=True)
 def lifespan() -> Iterator[None]:
     AuthYouTube().auth()
 
