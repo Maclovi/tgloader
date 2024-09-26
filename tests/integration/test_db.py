@@ -45,7 +45,7 @@ class TestEngine:
     async def test_version(self, async_engine: AsyncEngine) -> None:
         async with async_engine.connect() as conn:
             result = (await conn.execute(text("select version()"))).one()
-            assert "PostgreSQL 16.3" in result[0][:20]
+            assert "PostgreSQL 16.4" in result[0][:20]
 
     @pytest.mark.asyncio
     async def test_ping_db(self, async_engine: AsyncEngine) -> None:
