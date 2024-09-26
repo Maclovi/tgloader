@@ -1,5 +1,4 @@
 import logging
-from asyncio import Semaphore
 from functools import partial
 from typing import TYPE_CHECKING, cast
 
@@ -41,7 +40,7 @@ async def handle_youtube_url(event: NewMessage.Event, ioc: "Container") -> None:
 
 
 async def download_youtube(event: NewMessage.Event, ioc: "Container") -> None:
-    async with Semaphore(5):
+    async with ioc._semaphore_download:
         client = cast("TelegramClient", event.client)
         yt_dto = YouTubeDTO.to_class(event.raw_text)
         bot_id = ioc.config.tg_ids.bot_id

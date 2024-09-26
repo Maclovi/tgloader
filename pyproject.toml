@@ -29,24 +29,24 @@ keywords = [
     "telegram",
 ]
 dependencies = [
-    "pytubefix==6.12.0",
-    "aiogram>=3,<4",
-    "telethon>=1,<2",
-    "cryptg==0.4.0",
-    "sqlalchemy==2.0.3",
-    "alembic==1.13.2",
+    "pytubefix == 7.0.0",
+    "aiogram >= 3, < 4",
+    "telethon >= 1, < 2",
+    "cryptg == 0.4.0",
+    "sqlalchemy == 2.0.3",
+    "alembic == 1.13.2",
     "psycopg[binary]",
-    "redis>=5",
+    "redis >= 5",
 ]
 
 [project.optional-dependencies]
 testing = [
-    "pytest==8.3.2",
-    "pytest-asyncio==0.23.8",
+    "pytest == 8.3.2",
+    "pytest-asyncio == 0.23.8",
 ]
 
 types = [
-    "mypy==1.11.1",
+    "mypy == 1.11.1",
     # mypy extensions
     "types-setuptools",
     "types-redis",
@@ -54,10 +54,10 @@ types = [
 
 lint = [
     "loader[types]",
-    "ruff==0.6.1",
-    "bandit==1.7.9",
-    "semgrep==1.84.1",
-    "codespell==2.3.0",
+    "ruff == 0.6.1",
+    "bandit == 1.7.9",
+    "semgrep == 1.84.1",
+    "codespell == 2.3.0",
 ]
 
 dev = ["loader[lint,testing]"]

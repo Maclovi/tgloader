@@ -1,3 +1,4 @@
+import asyncio
 from collections.abc import AsyncIterator
 from contextlib import _AsyncGeneratorContextManager, asynccontextmanager
 from dataclasses import dataclass
@@ -26,6 +27,7 @@ class Container:
     http_client: ClientSession
     redis: Redis  # type: ignore
     _engine: AsyncEngine
+    _semaphore_download: asyncio.Semaphore
 
     async def aclose(self) -> None:
         await self.http_client.close()
@@ -69,4 +71,5 @@ def init_container(*, resolve_httpclient: bool = False) -> Container:
         http_client=http_client,
         redis=Redis.from_url(conf.redis.redis_uri),
         _engine=engine,
+        _semaphore_download=asyncio.Semaphore(5),
     )
